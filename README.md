@@ -32,7 +32,11 @@ Copiar `.env.example` a `.env` en cada pieza que lo necesite y completar los val
 
 Los comandos se completan a medida que avanzan las etapas.
 
-1. **Base de datos:** disponible en la etapa 2.
+1. **Base de datos** (PostgreSQL 16; en esta máquina corre en el puerto 5433 porque la 18 ocupa el 5432):
+   - Crear el usuario y la base una sola vez, con `psql` como `postgres`: `CREATE ROLE morazul LOGIN PASSWORD '...'` y `CREATE DATABASE morazul OWNER morazul`.
+   - Copiar `.env.example` a `.env` y completar `DB_USER`, `DB_PASSWORD` y `DB_PORT`.
+   - Construir la base desde cero y probarla: `bash db/reconstruir.sh --probar`. Si `psql` no está en el PATH, anteponer `PSQL="ruta/a/psql"`.
+   - El script aplica el modelo v1 y las migraciones de `db/migrations/` en orden. La 003 se genera con `node db/scripts/generar_carga_catalogo.js`.
 2. **API:** disponible en la etapa 3.
 3. **Panel de administración:** disponible en la etapa 6.
 4. **Landing:** disponible en la etapa 7.
