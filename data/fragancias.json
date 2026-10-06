@@ -1,0 +1,1252 @@
+[
+  {
+    "codigo": "CAB-001",
+    "nombre": "ASAD LATTAFA",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-002",
+    "nombre": "212 MEN NYC",
+    "inspirada_en": "CAROLINA HERRERA",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-003",
+    "nombre": "212 VIP MEN",
+    "inspirada_en": "CAROLINA HERRERA",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-004",
+    "nombre": "360 PERRY ELLIS MEN",
+    "inspirada_en": "PERRY ELLIS",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-005",
+    "nombre": "9 PM",
+    "inspirada_en": "AFNAN",
+    "es_arabe": true,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-006",
+    "nombre": "ACQUA DI GIO POUR HOME",
+    "inspirada_en": "GIORGIO ARMANI",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-007",
+    "nombre": "ACQUA DI GIO PROFUMO",
+    "inspirada_en": "GIORGIO ARMANI",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-008",
+    "nombre": "ALLURE HOMME SPORT",
+    "inspirada_en": "CHANEL",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-009",
+    "nombre": "AMEN DE MUGLER",
+    "inspirada_en": "THIERRY MUGLER",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-010",
+    "nombre": "BAD BOY NEW YORK",
+    "inspirada_en": "CAROLINA HERRERA",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-011",
+    "nombre": "BLACK XS",
+    "inspirada_en": "PACO RABANNE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-012",
+    "nombre": "BLEU DE CHANEL EAU DE PARFUM",
+    "inspirada_en": "CHANEL",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-013",
+    "nombre": "BVLGARI AQVA POUR HOMME",
+    "inspirada_en": "BVLGARI",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-014",
+    "nombre": "BVLGARI MAN",
+    "inspirada_en": "BVLGARI",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-015",
+    "nombre": "CLUB NUIT INTENSE MAN",
+    "inspirada_en": "ARMAF",
+    "es_arabe": true,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-016",
+    "nombre": "CREED AVENTUS",
+    "inspirada_en": "CREED",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-017",
+    "nombre": "DIESEL PLUS PLUS",
+    "inspirada_en": "DIESEL",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-018",
+    "nombre": "FAHRENHEIT",
+    "inspirada_en": "CHRISTIAN DIOR",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-019",
+    "nombre": "AL HARAMAIN AMBER OUD GOLD",
+    "inspirada_en": "",
+    "es_arabe": true,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-020",
+    "nombre": "HUGO BOSS MAN",
+    "inspirada_en": "HUGO BOSS",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-021",
+    "nombre": "HUGO BOSS BOTTLE",
+    "inspirada_en": "HUGO BOSS",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-022",
+    "nombre": "INVICTUS CLASICA",
+    "inspirada_en": "PACO RABANNE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-023",
+    "nombre": "INVICTUS VICTORY",
+    "inspirada_en": "PACO RABANNE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-024",
+    "nombre": "ISSEY MIYAKE POUR HOMME",
+    "inspirada_en": "ISSEY MIYAKE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-025",
+    "nombre": "JEAN PASCAL HOMME",
+    "inspirada_en": "JEAN PASCAL",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-026",
+    "nombre": "LACOSTE BLANCA",
+    "inspirada_en": "LACOSTE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-027",
+    "nombre": "LACOSTE RED",
+    "inspirada_en": "LACOSTE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-028",
+    "nombre": "LAPIDUS POUR HOMME",
+    "inspirada_en": "LAPIDUS",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-029",
+    "nombre": "LE MALE",
+    "inspirada_en": "JEAN PAUL GAULTIER LE MALE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-030",
+    "nombre": "LIGHT BLUE MEN",
+    "inspirada_en": "DOLCE&GABBANA",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-031",
+    "nombre": "MANDARIN SKY",
+    "inspirada_en": "ARMAF ODYSSEY",
+    "es_arabe": true,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-032",
+    "nombre": "MOSCHINO TOY BOY",
+    "inspirada_en": "MOSCHINO",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-033",
+    "nombre": "NAUTICA VOYAGE",
+    "inspirada_en": "NAUTICA",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-034",
+    "nombre": "NITRO RED",
+    "inspirada_en": "DUMON PARIS",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-035",
+    "nombre": "ONE MILLION",
+    "inspirada_en": "PACO RABANNE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-036",
+    "nombre": "ONE MILLION LUCKY",
+    "inspirada_en": "PACO RABANNE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-037",
+    "nombre": "OMBRE NOMADE",
+    "inspirada_en": "LOUIS VUITTON",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-038",
+    "nombre": "PARIS HILTON HOMBRE",
+    "inspirada_en": "PARIS HILTON",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-039",
+    "nombre": "POLO BLUE",
+    "inspirada_en": "RALPH LAUREN",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-040",
+    "nombre": "POLO RED",
+    "inspirada_en": "RALPH LAUREN",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-041",
+    "nombre": "PURE XS",
+    "inspirada_en": "PACO RABANNE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-042",
+    "nombre": "SAUVAGE PARFUM",
+    "inspirada_en": "DIOR",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-043",
+    "nombre": "SOLO LOEWE",
+    "inspirada_en": "SOLO LOEWE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-044",
+    "nombre": "STARWALKER MONTBLANC",
+    "inspirada_en": "MONT BLANC",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-045",
+    "nombre": "SWISS ARMY CLASSIC",
+    "inspirada_en": "VICTORINOX",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-046",
+    "nombre": "TOMMY MEN",
+    "inspirada_en": "TOMMY HILFIGER",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-047",
+    "nombre": "VERSACE EROS",
+    "inspirada_en": "VERSACE",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "CAB-048",
+    "nombre": "VALENTINO UOMO BORN IN ROMA",
+    "inspirada_en": "VALENTINO",
+    "es_arabe": false,
+    "categoria": "caballero",
+    "categoria_nombre": "Caballero",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-001",
+    "nombre": "212 SEXI",
+    "inspirada_en": "CAROLINA HERRERA",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-002",
+    "nombre": "212 VIP ROSE",
+    "inspirada_en": "CAROLINA HERRERA",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-003",
+    "nombre": "360 PERRY ELLIS WOMAN",
+    "inspirada_en": "PERRY ELLIS",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-004",
+    "nombre": "9 PM FEM",
+    "inspirada_en": "AFNAN",
+    "es_arabe": true,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-005",
+    "nombre": "ANGEL DE MUGLER",
+    "inspirada_en": "THIERRY MUGLER",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-006",
+    "nombre": "ARIANA GRANDE CLOUD",
+    "inspirada_en": "ARIANA GRANDE",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-007",
+    "nombre": "BOMBSHELL",
+    "inspirada_en": "VICTORIA'S SECRET",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-008",
+    "nombre": "BURBERRY HER ELIXIR",
+    "inspirada_en": "BURBERRY",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-009",
+    "nombre": "BVLGARI OMNIA CORAL",
+    "inspirada_en": "BVLGARI",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-010",
+    "nombre": "CH CAROLINA HERRERA",
+    "inspirada_en": "CAROLINA HERRERA",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-011",
+    "nombre": "CAN CAN",
+    "inspirada_en": "PARIS HILTON",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-012",
+    "nombre": "COCO CHANEL MADEMOISELLE",
+    "inspirada_en": "CHANEL",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-013",
+    "nombre": "DYLAN BLUE VERSACE",
+    "inspirada_en": "VERSACE",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-014",
+    "nombre": "ESCADA",
+    "inspirada_en": "SORBETTO ROSSO",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-015",
+    "nombre": "FAME",
+    "inspirada_en": "PACO RABANNE",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-016",
+    "nombre": "FANTASY",
+    "inspirada_en": "BRITNEY SPEARS",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-017",
+    "nombre": "FLOWER BY KENZO",
+    "inspirada_en": "KENZO",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-018",
+    "nombre": "GOOD GIRL NEW YORK",
+    "inspirada_en": "CAROLINA HERRERA",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-019",
+    "nombre": "GOOD GIRL BLUSH",
+    "inspirada_en": "CAROLINA HERRERA",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-020",
+    "nombre": "GOOD GIRL VERY",
+    "inspirada_en": "CAROLINA HERRERA",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-021",
+    "nombre": "GUESS GOLD",
+    "inspirada_en": "GUESS",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-022",
+    "nombre": "HALLOWEEN",
+    "inspirada_en": "JESÚS DEL POZO",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-023",
+    "nombre": "HEIRES PARIS HILTON",
+    "inspirada_en": "PARIS HILTON",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-024",
+    "nombre": "ILMIN IL FEMME",
+    "inspirada_en": "ILMIN",
+    "es_arabe": true,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-025",
+    "nombre": "ISSEY MIYAKE FEMENINA",
+    "inspirada_en": "ISSEY MIYAKE",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-026",
+    "nombre": "J´ADORE",
+    "inspirada_en": "DIOR",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-027",
+    "nombre": "LA VIE EST BELLE",
+    "inspirada_en": "LA VIE EST BELLE",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-028",
+    "nombre": "LACOSTE PINK",
+    "inspirada_en": "LACOSTE",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-029",
+    "nombre": "LADY MILLION",
+    "inspirada_en": "PACO RABANNE",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-030",
+    "nombre": "LIGHT BLUE WOMAN",
+    "inspirada_en": "DOLCE&GABBANA",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-031",
+    "nombre": "MEOW KATY PERRY",
+    "inspirada_en": "KATY PERRY",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-032",
+    "nombre": "MOSCHINO TOY 2",
+    "inspirada_en": "MOSCHINO",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-033",
+    "nombre": "MISS DIOR",
+    "inspirada_en": "DIOR",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-034",
+    "nombre": "NOBLE BLUSH",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-035",
+    "nombre": "OLIMPEA",
+    "inspirada_en": "PACO RABANNE",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-036",
+    "nombre": "PARIS HILTON CLASICA",
+    "inspirada_en": "PARIS HILTON",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-037",
+    "nombre": "RALPH LAUREN",
+    "inspirada_en": "RALPH LAUREN",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-038",
+    "nombre": "SCANDAL",
+    "inspirada_en": "JEAN PAUL GAULTIER",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-039",
+    "nombre": "SUNKISSED GODDESS",
+    "inspirada_en": "KILIAN HENNESSY",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-040",
+    "nombre": "SOFIA VERGARA",
+    "inspirada_en": "SOFIA VERGARA",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-041",
+    "nombre": "TOMMY GIRL",
+    "inspirada_en": "TOMMY HILFIGER",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-042",
+    "nombre": "TOUCH",
+    "inspirada_en": "FRED HAYMAN",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-043",
+    "nombre": "TRIBU",
+    "inspirada_en": "BENETTON",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-044",
+    "nombre": "VALENTINO DONNA",
+    "inspirada_en": "VALENTINO",
+    "es_arabe": false,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-045",
+    "nombre": "YARA CANDY",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-046",
+    "nombre": "YARA",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-047",
+    "nombre": "YARA TOUS",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-048",
+    "nombre": "YARA MOI",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "DAM-049",
+    "nombre": "YUM YUM",
+    "inspirada_en": "ARMAF",
+    "es_arabe": true,
+    "categoria": "dama",
+    "categoria_nombre": "Dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-001",
+    "nombre": "AMATISTE BADEE UNISEX AL OUD",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-002",
+    "nombre": "BACCARAT ROUGE 540",
+    "inspirada_en": "FRANCIS PARFUM",
+    "es_arabe": true,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-003",
+    "nombre": "CALVIN KLEIN ONE",
+    "inspirada_en": "CALVIN KLEIN",
+    "es_arabe": false,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-004",
+    "nombre": "CREED SILVER MONTAIN",
+    "inspirada_en": "CREED",
+    "es_arabe": false,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-005",
+    "nombre": "HONOR & GLORY",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-006",
+    "nombre": "KHAMRAH LATTAFA",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-007",
+    "nombre": "GLORY OLD FOR",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-008",
+    "nombre": "BOND N°9 BLEECKER",
+    "inspirada_en": "NYC",
+    "es_arabe": false,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-009",
+    "nombre": "SANTAL 33",
+    "inspirada_en": "LE LABO",
+    "es_arabe": false,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "UNI-010",
+    "nombre": "SUBLIME BADEE AL OUD",
+    "inspirada_en": "LATTAFA",
+    "es_arabe": true,
+    "categoria": "unisex",
+    "categoria_nombre": "Unisex",
+    "color_caja": null,
+    "nota": ""
+  },
+  {
+    "codigo": "RVH-001",
+    "nombre": "DORSAY",
+    "inspirada_en": "ÉSIKA",
+    "es_arabe": false,
+    "categoria": "revista_hombre",
+    "categoria_nombre": "Revista hombre",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "RVH-002",
+    "nombre": "OHM BLACK COLOGNE",
+    "inspirada_en": "YANBAL",
+    "es_arabe": false,
+    "categoria": "revista_hombre",
+    "categoria_nombre": "Revista hombre",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "RVH-003",
+    "nombre": "OSADIA HOMBRE",
+    "inspirada_en": "YANBAL",
+    "es_arabe": false,
+    "categoria": "revista_hombre",
+    "categoria_nombre": "Revista hombre",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "RVH-004",
+    "nombre": "SOLO FOR MEN",
+    "inspirada_en": "YANBAL",
+    "es_arabe": false,
+    "categoria": "revista_hombre",
+    "categoria_nombre": "Revista hombre",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "RVH-005",
+    "nombre": "TEMTATION MEN",
+    "inspirada_en": "YANBAL",
+    "es_arabe": false,
+    "categoria": "revista_hombre",
+    "categoria_nombre": "Revista hombre",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "RVD-001",
+    "nombre": "CCORI",
+    "inspirada_en": "YANBAL",
+    "es_arabe": false,
+    "categoria": "revista_dama",
+    "categoria_nombre": "Revista dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "RVD-002",
+    "nombre": "CIELO",
+    "inspirada_en": "YANBAL",
+    "es_arabe": false,
+    "categoria": "revista_dama",
+    "categoria_nombre": "Revista dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "RVD-003",
+    "nombre": "GAIA",
+    "inspirada_en": "YANBAL",
+    "es_arabe": false,
+    "categoria": "revista_dama",
+    "categoria_nombre": "Revista dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "RVD-004",
+    "nombre": "OSADIA DAMA",
+    "inspirada_en": "YANBAL",
+    "es_arabe": false,
+    "categoria": "revista_dama",
+    "categoria_nombre": "Revista dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "RVD-005",
+    "nombre": "TEMTATION DAMA",
+    "inspirada_en": "YANBAL",
+    "es_arabe": false,
+    "categoria": "revista_dama",
+    "categoria_nombre": "Revista dama",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "NIA-001",
+    "nombre": "BARBIE",
+    "inspirada_en": "",
+    "es_arabe": false,
+    "categoria": "nina",
+    "categoria_nombre": "Niña",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "NIA-002",
+    "nombre": "FROZEN",
+    "inspirada_en": "",
+    "es_arabe": false,
+    "categoria": "nina",
+    "categoria_nombre": "Niña",
+    "color_caja": "morada",
+    "nota": "Pasa a ser mini"
+  },
+  {
+    "codigo": "NIA-003",
+    "nombre": "MINNIE",
+    "inspirada_en": "",
+    "es_arabe": false,
+    "categoria": "nina",
+    "categoria_nombre": "Niña",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "NIA-004",
+    "nombre": "TOUS KIDS",
+    "inspirada_en": "",
+    "es_arabe": false,
+    "categoria": "nina",
+    "categoria_nombre": "Niña",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "NIA-005",
+    "nombre": "FRESA ROSITA",
+    "inspirada_en": "",
+    "es_arabe": false,
+    "categoria": "nina",
+    "categoria_nombre": "Niña",
+    "color_caja": "morada",
+    "nota": ""
+  },
+  {
+    "codigo": "NIO-001",
+    "nombre": "ARRURU",
+    "inspirada_en": "",
+    "es_arabe": false,
+    "categoria": "nino",
+    "categoria_nombre": "Niño",
+    "color_caja": "azul",
+    "nota": "AZUL Y ROSADA"
+  },
+  {
+    "codigo": "NIO-002",
+    "nombre": "PATRULLA CANINA",
+    "inspirada_en": "",
+    "es_arabe": false,
+    "categoria": "nino",
+    "categoria_nombre": "Niño",
+    "color_caja": "azul",
+    "nota": ""
+  },
+  {
+    "codigo": "NIO-003",
+    "nombre": "AVENGERS BOY",
+    "inspirada_en": "",
+    "es_arabe": false,
+    "categoria": "nino",
+    "categoria_nombre": "Niño",
+    "color_caja": "azul",
+    "nota": ""
+  }
+]
