@@ -27,7 +27,6 @@ export default function Productos() {
   const [busqueda, setBusqueda] = useState('');
   const [categoria, setCategoria] = useState('');
   const [estado, setEstado] = useState('');
-  const [presentacion, setPresentacion] = useState('');
   const [pagina, setPagina] = useState(1);
   const [ventana, setVentana] = useState(null); // { tipo, ... }
   const q = useRetraso(busqueda.trim(), 300);
@@ -36,9 +35,9 @@ export default function Productos() {
   const lista = useCarga(
     () =>
       api('/api/productos', {
-        consulta: { q: q || undefined, categoria, presentacion, ...(FILTROS_ESTADO[estado] ?? {}), pagina, limite: POR_PAGINA },
+        consulta: { q: q || undefined, categoria, ...(FILTROS_ESTADO[estado] ?? {}), pagina, limite: POR_PAGINA },
       }),
-    [q, categoria, estado, presentacion, pagina]
+    [q, categoria, estado, pagina]
   );
 
   const d = lista.datos;
@@ -82,12 +81,6 @@ export default function Productos() {
           <option value="agotado">Agotado</option>
           <option value="borrador">Borrador</option>
           <option value="inactivo">Inactivo</option>
-        </select>
-        <select className="filtro" aria-label="Filtrar por presentación" value={presentacion} onChange={cambiarFiltro(setPresentacion)}>
-          <option value="">Presentación</option>
-          <option value="30">30 ml</option>
-          <option value="60">60 ml</option>
-          <option value="100">100 ml</option>
         </select>
         <div className="herramientas__fin pagina__acciones">
           <Boton variante="secundario" onClick={() => setVentana({ tipo: 'ajustes' })}>

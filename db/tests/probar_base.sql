@@ -22,28 +22,36 @@ BEGIN
     RAISE EXCEPTION 'La sentencia debía fallar y se ejecutó: %', sentencia;
 END $$;
 
--- 1. Conteos del catálogo -------------------------------------------------
+-- 1. Conteos del catálogo (solo 30 ml) --------------------------------------
 DO $$
 BEGIN
     ASSERT (SELECT count(*) FROM categoria) = 7,  'Se esperaban 7 categorías';
     ASSERT (SELECT count(*) FROM fragancia) = 125, 'Se esperaban 125 fragancias';
-    ASSERT (SELECT count(*) FROM producto) = 375,  'Se esperaban 375 productos';
+    ASSERT (SELECT count(*) FROM producto) = 125,  'Se esperaban 125 productos (uno de 30 ml por fragancia)';
     ASSERT (SELECT count(*) FROM fragancia WHERE es_arabe) = 19, 'Se esperaban 19 fragancias árabes';
-    ASSERT (SELECT count(*) FROM producto WHERE presentacion_ml = 30  AND precio_venta = 20000 AND estado = 'activo') = 125, '30 ml: $20.000 y activos';
-    ASSERT (SELECT count(*) FROM producto WHERE presentacion_ml = 60  AND precio_venta = 40000 AND estado = 'activo') = 125, '60 ml: $40.000 y activos';
-    ASSERT (SELECT count(*) FROM producto WHERE presentacion_ml = 100 AND precio_venta IS NULL AND estado = 'borrador') = 125, '100 ml: borrador sin precio';
+    ASSERT (SELECT count(*) FROM producto WHERE presentacion_ml = 30 AND precio_venta = 20000 AND estado = 'activo') = 125, 'Todos: 30 ml, $20.000 y activos';
+    ASSERT (SELECT count(*) FROM producto WHERE presentacion_ml <> 30) = 0, 'No debe haber presentaciones de 60 ni 100 ml';
     ASSERT (SELECT count(*) FROM producto WHERE existencias <> 0) = 0, 'Existencias iniciales en 0';
     ASSERT (SELECT count(*) FROM categoria c JOIN fragancia f USING (id_categoria) WHERE c.nombre = 'Caballero') = 48, 'Caballero: 48';
     ASSERT (SELECT count(*) FROM categoria c JOIN fragancia f USING (id_categoria) WHERE c.nombre = 'Dama') = 49, 'Dama: 49';
+    ASSERT (SELECT count(*) FROM imagen_generica WHERE presentacion_ml IS NOT NULL AND presentacion_ml <> 30) = 0, 'Solo imagen genérica de 30 ml';
     RAISE NOTICE 'OK  conteos del catálogo';
+END $$;
+
+-- 1b. La base solo admite 30 ml (migración 005) -----------------------------
+DO $$
+BEGIN
+    PERFORM pg_temp.debe_fallar('INSERT INTO producto (id_fragancia, presentacion_ml) SELECT id_fragancia, 60 FROM fragancia LIMIT 1', '23514');
+    PERFORM pg_temp.debe_fallar('INSERT INTO producto (id_fragancia, presentacion_ml) SELECT id_fragancia, 100 FROM fragancia LIMIT 1', '23514');
+    PERFORM pg_temp.debe_fallar('INSERT INTO imagen_generica (presentacion_ml, color_caja, url) VALUES (60, ''azul'', ''x.webp'')', '23514');
+    RAISE NOTICE 'OK  solo presentación de 30 ml';
 END $$;
 
 -- 2. Nombre calculado y catálogo público ----------------------------------
 DO $$
 BEGIN
-    ASSERT (SELECT nombre FROM v_producto WHERE codigo = 'CAB-001' AND presentacion_ml = 100) = 'ASAD LATTAFA 100 ml', 'Nombre calculado incorrecto';
-    ASSERT (SELECT count(*) FROM v_catalogo_publico) = 250, 'El catálogo público debe tener 250 presentaciones (30 y 60 ml)';
-    ASSERT (SELECT count(*) FROM v_catalogo_publico WHERE presentacion_ml = 100) = 0, 'Ningún 100 ml en borrador debe ser público';
+    ASSERT (SELECT nombre FROM v_producto WHERE codigo = 'CAB-001') = 'ASAD LATTAFA 30 ml', 'Nombre calculado incorrecto';
+    ASSERT (SELECT count(*) FROM v_catalogo_publico) = 125, 'El catálogo público debe tener 125 presentaciones';
     ASSERT (SELECT count(*) FROM v_catalogo_publico WHERE inspirada_en IS NOT NULL) = 0, '"Inspirada en" debe estar oculto por defecto';
     ASSERT (SELECT count(*) FROM v_catalogo_publico WHERE disponibilidad <> 'Agotado') = 0, 'Con existencias 0 todo figura Agotado';
     RAISE NOTICE 'OK  nombre calculado y catálogo público';
@@ -52,14 +60,14 @@ END $$;
 -- 3. Regla de imagen ------------------------------------------------------
 DO $$
 BEGIN
-    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE codigo = 'CAB-001' AND presentacion_ml = 30) = 'genericas/generica-30ml.webp', '30 ml usa la genérica sin color';
-    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE codigo = 'CAB-001' AND presentacion_ml = 60) = 'genericas/generica-60ml-azul.webp', 'Caballero 60 ml: caja azul';
-    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE codigo = 'DAM-001' AND presentacion_ml = 60) = 'genericas/generica-60ml-morada.webp', 'Dama 60 ml: caja morada';
-    -- Unisex sin color de caja: cae a la imagen de reserva.
-    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE codigo = (SELECT min(codigo) FROM fragancia WHERE codigo LIKE 'UNI-%') AND presentacion_ml = 60) = 'genericas/reserva.webp', 'Unisex 60 ml sin color usa la reserva';
+    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE codigo = 'CAB-001') = 'genericas/generica-30ml.webp', 'Usa la imagen genérica de 30 ml';
+    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE codigo = 'DAM-001') = 'genericas/generica-30ml.webp', 'La imagen no depende del color de la caja';
     -- La foto propia tiene prioridad.
     UPDATE fragancia SET imagen_url = 'propias/cab-001.webp' WHERE codigo = 'CAB-001';
-    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE codigo = 'CAB-001' AND presentacion_ml = 60) = 'propias/cab-001.webp', 'La foto propia debe ganar';
+    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE codigo = 'CAB-001') = 'propias/cab-001.webp', 'La foto propia debe ganar';
+    -- Sin foto propia ni genérica cae a la imagen de reserva.
+    DELETE FROM imagen_generica WHERE presentacion_ml = 30;
+    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE codigo = 'CAB-002') = 'genericas/reserva.webp', 'Sin genérica usa la reserva';
     RAISE NOTICE 'OK  regla de imagen';
 END $$;
 
@@ -68,20 +76,22 @@ DO $$
 DECLARE
     v_id integer;
 BEGIN
-    SELECT id_producto INTO v_id FROM v_producto WHERE codigo = 'CAB-002' AND presentacion_ml = 100;
+    SELECT id_producto INTO v_id FROM v_producto WHERE codigo = 'CAB-002';
+    -- Se deja el producto en borrador y sin precio.
+    UPDATE producto SET estado = 'borrador', precio_venta = NULL, visible_landing = FALSE WHERE id_producto = v_id;
+    ASSERT (SELECT count(*) FROM v_catalogo_publico WHERE id_producto = v_id) = 0, 'Un borrador no debe ser público';
+
     PERFORM pg_temp.debe_fallar(format('UPDATE producto SET estado = ''activo'' WHERE id_producto = %s', v_id), '23514');
     PERFORM pg_temp.debe_fallar(format('UPDATE producto SET estado = ''activo'', precio_venta = 0 WHERE id_producto = %s', v_id), '23514');
     PERFORM pg_temp.debe_fallar(format('UPDATE producto SET visible_landing = TRUE WHERE id_producto = %s', v_id), '23514');
     -- Con precio mayor que cero sí se publica.
-    UPDATE producto SET precio_venta = 70000, estado = 'activo', visible_landing = TRUE WHERE id_producto = v_id;
-    ASSERT (SELECT count(*) FROM v_catalogo_publico WHERE id_producto = v_id) = 1, 'El 100 ml con precio debe aparecer en la landing';
-    ASSERT (SELECT imagen_url FROM v_catalogo_publico WHERE id_producto = v_id) = 'genericas/generica-100ml-azul.webp', '100 ml usa la genérica de 100 ml';
+    UPDATE producto SET precio_venta = 25000, estado = 'activo', visible_landing = TRUE WHERE id_producto = v_id;
+    ASSERT (SELECT count(*) FROM v_catalogo_publico WHERE id_producto = v_id) = 1, 'Con precio debe aparecer en la landing';
     -- Inactivar lo saca del catálogo.
     UPDATE producto SET estado = 'inactivo', visible_landing = FALSE WHERE id_producto = v_id;
     ASSERT (SELECT count(*) FROM v_catalogo_publico WHERE id_producto = v_id) = 0, 'Un inactivo no debe ser público';
-    -- Una sola fila por fragancia y presentación, y solo 30, 60 o 100 ml.
+    -- Una sola fila por fragancia.
     PERFORM pg_temp.debe_fallar('INSERT INTO producto (id_fragancia, presentacion_ml) SELECT id_fragancia, 30 FROM fragancia LIMIT 1', '23505');
-    PERFORM pg_temp.debe_fallar('INSERT INTO producto (id_fragancia, presentacion_ml) SELECT id_fragancia, 45 FROM fragancia LIMIT 1', '23514');
     RAISE NOTICE 'OK  reglas de publicación';
 END $$;
 
@@ -98,7 +108,7 @@ DECLARE
     v_mov     integer;
 BEGIN
     SELECT id_usuario  INTO v_usuario FROM usuario WHERE correo = 'prueba@morazul.test';
-    SELECT id_producto INTO v_prod FROM v_producto WHERE codigo = 'DAM-001' AND presentacion_ml = 60;
+    SELECT id_producto INTO v_prod FROM v_producto WHERE codigo = 'DAM-001';
     UPDATE producto SET umbral_minimo = 3 WHERE id_producto = v_prod;
 
     -- Entrada de 10 unidades: existencias 10, sin alerta.
@@ -132,15 +142,15 @@ BEGIN
 
     -- Caja y venta: abierta admite ventas, cerrada no.
     INSERT INTO caja_diaria (id_usuario, fecha, saldo_apertura) VALUES (v_usuario, current_date, 50000) RETURNING id_caja INTO v_caja;
-    INSERT INTO venta (id_caja, id_usuario, total) VALUES (v_caja, v_usuario, 40000) RETURNING id_venta INTO v_venta;
-    INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VALUES (v_venta, v_prod, 1, 40000) RETURNING id_detalle INTO v_detalle;
+    INSERT INTO venta (id_caja, id_usuario, total) VALUES (v_caja, v_usuario, 20000) RETURNING id_venta INTO v_venta;
+    INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VALUES (v_venta, v_prod, 1, 20000) RETURNING id_detalle INTO v_detalle;
     INSERT INTO movimiento_inventario (id_producto, id_usuario, id_detalle, tipo, cantidad) VALUES (v_prod, v_usuario, v_detalle, 'venta', -1);
-    INSERT INTO movimiento_caja (id_caja, id_usuario, id_venta, tipo, concepto, valor) VALUES (v_caja, v_usuario, v_venta, 'ingreso', 'Venta de prueba', 40000);
-    ASSERT (SELECT saldo_esperado FROM v_resumen_caja WHERE id_caja = v_caja) = 90000, 'Saldo esperado de la caja';
+    INSERT INTO movimiento_caja (id_caja, id_usuario, id_venta, tipo, concepto, valor) VALUES (v_caja, v_usuario, v_venta, 'ingreso', 'Venta de prueba', 20000);
+    ASSERT (SELECT saldo_esperado FROM v_resumen_caja WHERE id_caja = v_caja) = 70000, 'Saldo esperado de la caja';
     ASSERT (SELECT unidades_vendidas FROM v_ventas_producto_dia WHERE id_producto = v_prod) = 1, 'Reporte de ventas por producto y día';
     ASSERT (SELECT nombre FROM v_ventas_producto_dia WHERE id_producto = v_prod) = (SELECT nombre FROM v_producto WHERE id_producto = v_prod), 'El reporte usa el nombre calculado';
 
-    UPDATE caja_diaria SET estado = 'cerrada', saldo_cierre = 90000, cerrada_en = now() WHERE id_caja = v_caja;
+    UPDATE caja_diaria SET estado = 'cerrada', saldo_cierre = 70000, cerrada_en = now() WHERE id_caja = v_caja;
     PERFORM pg_temp.debe_fallar(format('INSERT INTO venta (id_caja, id_usuario, total) VALUES (%s, %s, 1000)', v_caja, v_usuario), '23514');
     PERFORM pg_temp.debe_fallar(format('INSERT INTO movimiento_caja (id_caja, id_usuario, tipo, concepto, valor) VALUES (%s, %s, ''egreso'', ''x'', 1000)', v_caja, v_usuario), '23514');
     RAISE NOTICE 'OK  inventario, alertas, caja y ventas';
@@ -158,7 +168,8 @@ BEGIN
     SELECT id_caja INTO v_caja FROM caja_diaria WHERE fecha = current_date;
     UPDATE caja_diaria SET estado = 'abierta', saldo_cierre = NULL, cerrada_en = NULL WHERE id_caja = v_caja;
     INSERT INTO venta (id_caja, id_usuario, total) VALUES (v_caja, v_usuario, 1000) RETURNING id_venta INTO v_venta;
-    SELECT id_producto INTO v_borrador FROM v_producto WHERE codigo = 'DAM-002' AND presentacion_ml = 100;
+    SELECT id_producto INTO v_borrador FROM v_producto WHERE codigo = 'DAM-002';
+    UPDATE producto SET estado = 'borrador', visible_landing = FALSE WHERE id_producto = v_borrador;
     PERFORM pg_temp.debe_fallar(format('INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VALUES (%s, %s, 1, 1000)', v_venta, v_borrador), '23514');
     RAISE NOTICE 'OK  no se vende un producto en borrador';
 END $$;
@@ -167,7 +178,7 @@ END $$;
 DO $$
 BEGIN
     UPDATE configuracion SET valor = 'true' WHERE clave = 'mostrar_inspirada_en';
-    ASSERT (SELECT inspirada_en FROM v_catalogo_publico WHERE codigo = 'CAB-002' AND presentacion_ml = 30) = 'CAROLINA HERRERA', 'Con el interruptor encendido se muestra la marca';
+    ASSERT (SELECT inspirada_en FROM v_catalogo_publico WHERE codigo = 'CAB-001') = 'LATTAFA', 'Con el interruptor encendido se muestra la marca';
     RAISE NOTICE 'OK  interruptor inspirada en';
 END $$;
 

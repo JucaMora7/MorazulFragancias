@@ -45,8 +45,9 @@ const config = {
     maxBytes: 3 * 1024 * 1024,
     anchoMax: 800,
   },
-  // Precios fijos del negocio al crear una fragancia nueva. Los 100 ml los define el administrador.
-  preciosIniciales: { 30: 20000, 60: 40000, 100: null },
+  // El negocio solo vende la presentación de 30 ml. Precio con el que nace cada fragancia nueva;
+  // el administrador puede cambiarlo después.
+  precioInicial30ml: 20000,
   contacto: {
     whatsapp: process.env.CONTACTO_WHATSAPP || '573233278897',
     correo: process.env.CONTACTO_CORREO || 'MorazulFragancias@gmail.com',

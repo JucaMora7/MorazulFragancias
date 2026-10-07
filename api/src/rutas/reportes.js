@@ -29,7 +29,7 @@ async function leerRango(query) {
 const dinero = (v) => Number(v ?? 0);
 const DIA_BOGOTA = "CAST(v.fecha_hora AT TIME ZONE 'America/Bogota' AS date)";
 
-// Más y menos vendido, por presentación (producto) o sumando todas las presentaciones de la fragancia.
+// Más y menos vendido, por producto o por fragancia (hoy cada fragancia tiene un solo producto).
 //  · "mas": solo lo que se vendió en el rango, de mayor a menor (incluye productos hoy inactivos).
 //  · "menos": productos activos con existencias, de menos a más vendido; los que no se vendieron
 //    nada salen primero, con su stock, que es lo que está parado. Con solo_con_ventas=true se
@@ -43,10 +43,6 @@ function rankingVentas(modo) {
     const soloConVentas = q.solo_con_ventas !== undefined && booleano(q.solo_con_ventas, 'solo_con_ventas');
     const reemplazos = { desde, hasta, limite };
     const filtros = [];
-    if (q.presentacion !== undefined) {
-      reemplazos.presentacion = opcion(entero(q.presentacion, 'presentacion'), 'presentacion', [30, 60, 100]);
-      filtros.push('p.presentacion_ml = :presentacion');
-    }
     if (q.categoria !== undefined) {
       reemplazos.categoria = entero(q.categoria, 'categoria', { min: 1 });
       filtros.push('p.id_categoria = :categoria');
@@ -142,12 +138,6 @@ router.get('/ventas', async (req, res) => {
       ORDER BY d.dia`,
     { replacements: reemplazos, type: QueryTypes.SELECT }
   );
-  const porPresentacion = await sequelize.query(
-    `SELECT p.presentacion_ml, SUM(dv.cantidad)::int AS unidades, SUM(dv.subtotal) AS ingresos
-       FROM venta v JOIN detalle_venta dv USING (id_venta) JOIN v_producto p USING (id_producto)
-      WHERE ${rango} GROUP BY p.presentacion_ml ORDER BY p.presentacion_ml`,
-    { replacements: reemplazos, type: QueryTypes.SELECT }
-  );
   const porCategoria = await sequelize.query(
     `SELECT p.categoria, SUM(dv.cantidad)::int AS unidades, SUM(dv.subtotal) AS ingresos
        FROM venta v JOIN detalle_venta dv USING (id_venta) JOIN v_producto p USING (id_producto)
@@ -168,7 +158,6 @@ router.get('/ventas', async (req, res) => {
       ticket_promedio: totales.ventas ? Math.round((ingresos / totales.ventas) * 100) / 100 : 0,
     },
     por_dia: serie.map((s) => ({ ...s, ingresos: dinero(s.ingresos) })),
-    por_presentacion: porPresentacion.map((s) => ({ ...s, ingresos: dinero(s.ingresos) })),
     por_categoria: porCategoria.map((s) => ({ ...s, ingresos: dinero(s.ingresos) })),
   });
 });

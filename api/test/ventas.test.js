@@ -11,7 +11,7 @@ before(async () => {
 });
 after(cerrar);
 
-const producto = async (codigo, ml) => (await api.get(`/api/productos?q=${codigo}&presentacion=${ml}`)).body.productos[0];
+const producto = async (codigo) => (await api.get(`/api/productos?q=${codigo}`)).body.productos[0];
 const entrada = (id, cantidad) => api.post('/api/inventario/movimientos').send({ id_producto: id, tipo: 'entrada', cantidad });
 const vender = (items) => api.post('/api/ventas').send({ items });
 const estadoDe = async () => {
@@ -21,8 +21,9 @@ const estadoDe = async () => {
   return x;
 };
 
+// Todos los productos son de 30 ml y cuestan $20.000 (precio inicial del catálogo).
 test('sin caja abierta no se puede vender', async () => {
-  const p = await producto('CAB-001', 30);
+  const p = await producto('CAB-001');
   await entrada(p.id_producto, 10);
   const r = await vender([{ id_producto: p.id_producto, cantidad: 1 }]);
   assert.equal(r.status, 422);
@@ -31,8 +32,8 @@ test('sin caja abierta no se puede vender', async () => {
 
 test('registra una venta: total con precios de la base, salida de inventario, ingreso en caja y auditoría', async () => {
   await api.post('/api/caja/abrir').send({ saldo_apertura: 20000 });
-  const a = await producto('CAB-001', 30);
-  const b = await producto('CAB-002', 60);
+  const a = await producto('CAB-001');
+  const b = await producto('CAB-002');
   await entrada(b.id_producto, 5);
 
   const r = await vender([
@@ -41,20 +42,20 @@ test('registra una venta: total con precios de la base, salida de inventario, in
   ]);
   assert.equal(r.status, 201);
   const v = r.body.venta;
-  assert.equal(v.total, 2 * 20000 + 40000);
+  assert.equal(v.total, 3 * 20000);
   assert.equal(v.usuario, 'Administrador de prueba');
   assert.deepEqual(v.items.map((i) => [i.id_producto, i.cantidad, i.precio_unitario, i.subtotal]), [
     [a.id_producto, 2, 20000, 40000],
-    [b.id_producto, 1, 40000, 40000],
+    [b.id_producto, 1, 20000, 20000],
   ]);
 
-  assert.equal((await producto('CAB-001', 30)).existencias, 8);
-  assert.equal((await producto('CAB-002', 60)).existencias, 4);
+  assert.equal((await producto('CAB-001')).existencias, 8);
+  assert.equal((await producto('CAB-002')).existencias, 4);
 
   const caja = await api.get('/api/caja/hoy');
-  assert.equal(caja.body.caja.ingresos, 80000);
-  assert.equal(caja.body.caja.saldo_esperado, 100000);
-  assert.ok(caja.body.movimientos.some((m) => m.id_venta === v.id_venta && m.valor === 80000 && m.productos === 2));
+  assert.equal(caja.body.caja.ingresos, 60000);
+  assert.equal(caja.body.caja.saldo_esperado, 80000);
+  assert.ok(caja.body.movimientos.some((m) => m.id_venta === v.id_venta && m.valor === 60000 && m.productos === 2));
   assert.equal(caja.body.movimientos.find((m) => m.id_venta === null)?.productos ?? 0, 0);
 
   const libro = await api.get(`/api/inventario/movimientos?tipo=venta&producto=${a.id_producto}`);
@@ -62,12 +63,12 @@ test('registra una venta: total con precios de la base, salida de inventario, in
   assert.equal(libro.body.movimientos[0].motivo, `Venta #${v.id_venta}`);
 
   const [[aud]] = await sequelize.query("SELECT detalle, id_usuario FROM auditoria WHERE entidad = 'venta' AND id_registro = :id", { replacements: { id: v.id_venta } });
-  assert.equal(aud.detalle.total, 80000);
+  assert.equal(aud.detalle.total, 60000);
   assert.equal(aud.id_usuario, ctx.admin.id_usuario);
 });
 
 test('si se repite un producto, las cantidades se suman en un solo renglón', async () => {
-  const p = await producto('CAB-001', 30);
+  const p = await producto('CAB-001');
   const r = await vender([
     { id_producto: p.id_producto, cantidad: 1 },
     { id_producto: p.id_producto, cantidad: 2 },
@@ -79,7 +80,7 @@ test('si se repite un producto, las cantidades se suman en un solo renglón', as
 });
 
 test('el precio lo pone el servidor: un precio enviado por el cliente se rechaza', async () => {
-  const p = await producto('CAB-001', 30);
+  const p = await producto('CAB-001');
   const antes = await estadoDe();
   const r = await vender([{ id_producto: p.id_producto, cantidad: 1, precio_unitario: 1 }]);
   assert.equal(r.status, 400);
@@ -89,7 +90,7 @@ test('el precio lo pone el servidor: un precio enviado por el cliente se rechaza
 });
 
 test('stock insuficiente: informa cuánto hay y no registra nada', async () => {
-  const p = await producto('CAB-001', 30);
+  const p = await producto('CAB-001');
   const antes = await estadoDe();
   const r = await vender([{ id_producto: p.id_producto, cantidad: 999 }]);
   assert.equal(r.status, 422);
@@ -99,8 +100,8 @@ test('stock insuficiente: informa cuánto hay y no registra nada', async () => {
 });
 
 test('es atómica: si una línea falla, no queda ni la venta ni las otras líneas', async () => {
-  const bueno = await producto('CAB-002', 60);
-  const sinStock = await producto('CAB-003', 60);
+  const bueno = await producto('CAB-002');
+  const sinStock = await producto('CAB-003');
   const antes = await estadoDe();
   const r = await vender([
     { id_producto: bueno.id_producto, cantidad: 1 },
@@ -110,24 +111,27 @@ test('es atómica: si una línea falla, no queda ni la venta ni las otras línea
   assert.equal(r.status, 422);
   assert.equal(r.body.error.detalles.length, 2);
   assert.deepEqual(await estadoDe(), antes);
-  assert.equal((await producto('CAB-002', 60)).existencias, 4);
+  assert.equal((await producto('CAB-002')).existencias, 4);
 });
 
-test('no se venden productos en borrador, inactivos ni sin precio', async () => {
-  const borrador = await producto('CAB-001', 100);
+test('no se venden productos en borrador ni inactivos', async () => {
+  const caballero = (await api.get('/api/categorias')).body.categorias.find((c) => c.nombre === 'Caballero');
+  const nueva = await api.post('/api/fragancias').send({ nombre: 'prueba borrador', id_categoria: caballero.id_categoria });
+  const borrador = nueva.body.fragancia.presentaciones[0];
   await entrada(borrador.id_producto, 5);
   const r = await vender([{ id_producto: borrador.id_producto, cantidad: 1 }]);
   assert.equal(r.status, 422);
   assert.match(r.body.error.mensaje, /no está disponible/i);
 
-  const p = await producto('CAB-004', 30);
+  const p = await producto('CAB-004');
   await entrada(p.id_producto, 3);
   await api.post(`/api/productos/${p.id_producto}/inactivar`);
   assert.equal((await vender([{ id_producto: p.id_producto, cantidad: 1 }])).status, 422);
 });
 
 test('la base también rechaza vender un producto en borrador aunque se salte la API', async () => {
-  const borrador = await producto('CAB-001', 100);
+  const borrador = await producto('CAB-049');
+  assert.equal(borrador.estado, 'borrador');
   const [[v]] = await sequelize.query('SELECT id_venta FROM venta LIMIT 1');
   await assert.rejects(
     sequelize.query('INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VALUES (:v, :p, 1, 1000)', {
@@ -137,7 +141,7 @@ test('la base también rechaza vender un producto en borrador aunque se salte la
 });
 
 test('valida la forma de la venta', async () => {
-  const p = await producto('CAB-001', 30);
+  const p = await producto('CAB-001');
   const casos = [
     [],
     [{ id_producto: p.id_producto, cantidad: 0 }],
@@ -158,19 +162,19 @@ test('valida la forma de la venta', async () => {
 });
 
 test('dos ventas simultáneas por la última unidad: una se registra y la otra se rechaza', async () => {
-  const p = await producto('CAB-005', 60);
+  const p = await producto('CAB-005');
   await entrada(p.id_producto, 1);
   const respuestas = await Promise.all(Array.from({ length: 4 }, () => vender([{ id_producto: p.id_producto, cantidad: 1 }])));
   const estados = respuestas.map((r) => r.status).sort();
   assert.deepEqual(estados, [201, 422, 422, 422]);
-  assert.equal((await producto('CAB-005', 60)).existencias, 0);
+  assert.equal((await producto('CAB-005')).existencias, 0);
   const [[{ vendidas }]] = await sequelize.query('SELECT COALESCE(SUM(cantidad),0)::int AS vendidas FROM detalle_venta WHERE id_producto = :id', { replacements: { id: p.id_producto } });
   assert.equal(vendidas, 1);
 });
 
 test('ventas simultáneas con los mismos productos en distinto orden no se bloquean entre sí', async () => {
-  const a = await producto('CAB-006', 30);
-  const b = await producto('CAB-007', 30);
+  const a = await producto('CAB-006');
+  const b = await producto('CAB-007');
   await entrada(a.id_producto, 20);
   await entrada(b.id_producto, 20);
   const tandas = [];
@@ -180,12 +184,12 @@ test('ventas simultáneas con los mismos productos en distinto orden no se bloqu
   }
   const respuestas = await Promise.all(tandas);
   assert.ok(respuestas.every((r) => r.status === 201), respuestas.map((r) => r.status).join(','));
-  assert.equal((await producto('CAB-006', 30)).existencias, 14);
-  assert.equal((await producto('CAB-007', 30)).existencias, 14);
+  assert.equal((await producto('CAB-006')).existencias, 14);
+  assert.equal((await producto('CAB-007')).existencias, 14);
 });
 
 test('un cambio de precio no altera las ventas ya hechas', async () => {
-  const p = await producto('CAB-006', 30);
+  const p = await producto('CAB-006');
   const venta = await vender([{ id_producto: p.id_producto, cantidad: 1 }]);
   await api.patch(`/api/productos/${p.id_producto}`).send({ precio_venta: 25000 });
   const detalle = await api.get(`/api/ventas/${venta.body.venta.id_venta}`);
@@ -214,7 +218,7 @@ test('con la caja cerrada ya no se puede vender, y el cierre cuadra con las vent
   const antes = (await api.get('/api/caja/hoy')).body.caja;
   const cierre = await api.post('/api/caja/hoy/cerrar').send({ saldo_cierre: antes.saldo_esperado });
   assert.equal(cierre.body.diferencia, 0);
-  const p = await producto('CAB-006', 30);
+  const p = await producto('CAB-006');
   const r = await vender([{ id_producto: p.id_producto, cantidad: 1 }]);
   assert.equal(r.status, 422);
   assert.match(r.body.error.mensaje, /cerrada/i);
@@ -222,10 +226,10 @@ test('con la caja cerrada ya no se puede vender, y el cierre cuadra con las vent
 
 test('el cierre de caja espera a las ventas en curso: ninguna venta queda fuera del saldo', async () => {
   // La caja cerrada pasa a ayer y se abre una nueva hoy para probar la concurrencia.
-  await sequelize.query("UPDATE caja_diaria SET fecha = fecha - 1");
+  await sequelize.query('UPDATE caja_diaria SET fecha = fecha - 1');
   const abrir = await api.post('/api/caja/abrir').send({ saldo_apertura: 0 });
   assert.equal(abrir.status, 201);
-  const p = await producto('CAB-007', 30);
+  const p = await producto('CAB-007');
   const ventas = Array.from({ length: 5 }, () => vender([{ id_producto: p.id_producto, cantidad: 1 }]));
   const cierre = api.post('/api/caja/hoy/cerrar').send({ saldo_cierre: 0 });
   const respuestas = await Promise.all([...ventas, cierre]);

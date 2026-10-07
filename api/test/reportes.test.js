@@ -7,26 +7,26 @@ let api;
 let hoy;
 let ids;
 
-const producto = async (codigo, ml) => (await api.get(`/api/productos?q=${codigo}&presentacion=${ml}`)).body.productos[0];
+const producto = async (codigo) => (await api.get(`/api/productos?q=${codigo}`)).body.productos[0];
 const entrada = (id, cantidad) => api.post('/api/inventario/movimientos').send({ id_producto: id, tipo: 'entrada', cantidad });
 const vender = (items) => api.post('/api/ventas').send({ items });
 const diasAntes = (fecha, n) => new Date(Date.parse(`${fecha}T00:00:00Z`) - n * 86400000).toISOString().slice(0, 10);
 const moverVenta = (id, dias) => sequelize.query("UPDATE venta SET fecha_hora = fecha_hora - make_interval(days => :d) WHERE id_venta = :id", { replacements: { d: dias, id } });
 
-// Datos de la prueba:
-//   hoy:        venta 1 = 3 x A (20.000) + 1 x B (40.000)            -> 100.000
-//   hace 2 días: venta 2 = 2 x A                                      ->  40.000
-//   hace 40 días: venta 3 = 1 x C (40.000), fuera del rango por defecto
+// Todos los productos cuestan $20.000. Datos de la prueba:
+//   hoy:          venta 1 = 3 x A + 1 x B                  -> 80.000
+//   hace 2 días:  venta 2 = 2 x A                          -> 40.000
+//   hace 40 días: venta 3 = 1 x C, fuera del rango por defecto -> 20.000
 //   D y E tienen stock y no se venden; F no tiene stock.
 before(async () => {
   ctx = await preparar();
   api = conSesion(ctx);
-  const A = await producto('CAB-001', 30);
-  const B = await producto('CAB-002', 60);
-  const C = await producto('DAM-001', 60);
-  const D = await producto('DAM-002', 30);
-  const E = await producto('CAB-003', 30);
-  const F = await producto('CAB-004', 60);
+  const A = await producto('CAB-001');
+  const B = await producto('CAB-002');
+  const C = await producto('DAM-001');
+  const D = await producto('DAM-002');
+  const E = await producto('CAB-003');
+  const F = await producto('CAB-004');
   ids = { A, B, C, D, E, F };
   for (const [p, n] of [[A, 50], [B, 50], [C, 50], [D, 10], [E, 7]]) await entrada(p.id_producto, n);
 
@@ -48,7 +48,7 @@ test('más vendidos del periodo por defecto (30 días): ordenados por unidades, 
   assert.equal(r.body.agrupar, 'producto');
   assert.deepEqual(r.body.ranking.map((x) => [x.posicion, x.id_producto, x.unidades_vendidas, x.ingresos]), [
     [1, ids.A.id_producto, 5, 100000],
-    [2, ids.B.id_producto, 1, 40000],
+    [2, ids.B.id_producto, 1, 20000],
   ]);
   assert.equal(r.body.ranking[0].existencias, 45);
 });
@@ -63,16 +63,17 @@ test('un rango más amplio incluye la venta antigua y respeta el límite', async
   assert.deepEqual(soloAyer.body.ranking, []);
 });
 
-test('filtra por presentación y por categoría', async () => {
-  const sesenta = await api.get('/api/reportes/mas-vendidos?presentacion=60');
-  assert.deepEqual(sesenta.body.ranking.map((x) => x.id_producto), [ids.B.id_producto]);
+test('filtra por categoría', async () => {
   const cats = (await api.get('/api/categorias')).body.categorias;
   const dama = cats.find((c) => c.nombre === 'Dama');
   const enDama = await api.get(`/api/reportes/mas-vendidos?categoria=${dama.id_categoria}&desde=${diasAntes(hoy, 60)}`);
   assert.deepEqual(enDama.body.ranking.map((x) => x.id_producto), [ids.C.id_producto]);
+  const caballero = cats.find((c) => c.nombre === 'Caballero');
+  const enCaballero = await api.get(`/api/reportes/mas-vendidos?categoria=${caballero.id_categoria}`);
+  assert.deepEqual(enCaballero.body.ranking.map((x) => x.id_producto), [ids.A.id_producto, ids.B.id_producto]);
 });
 
-test('agrupado por fragancia suma todas sus presentaciones', async () => {
+test('agrupado por fragancia da el mismo resultado: cada fragancia tiene un solo producto', async () => {
   const r = await api.get(`/api/reportes/mas-vendidos?agrupar=fragancia&desde=${diasAntes(hoy, 60)}`);
   assert.equal(r.body.agrupar, 'fragancia');
   assert.deepEqual(r.body.ranking.map((x) => [x.codigo, x.nombre, x.unidades_vendidas]), [
@@ -102,8 +103,11 @@ test('menos vendidos: solo los que sí se vendieron, y no incluye borradores ni 
   await api.post(`/api/productos/${ids.D.id_producto}/inactivar`);
   const sinD = await api.get('/api/reportes/menos-vendidos');
   assert.ok(!sinD.body.ranking.some((x) => x.id_producto === ids.D.id_producto));
-  const borrador = await producto('CAB-001', 100);
-  await api.post('/api/inventario/movimientos').send({ id_producto: borrador.id_producto, tipo: 'entrada', cantidad: 3 });
+
+  const caballero = (await api.get('/api/categorias')).body.categorias.find((c) => c.nombre === 'Caballero');
+  const nueva = await api.post('/api/fragancias').send({ nombre: 'prueba borrador', id_categoria: caballero.id_categoria });
+  const borrador = nueva.body.fragancia.presentaciones[0];
+  await entrada(borrador.id_producto, 3);
   const sinBorrador = await api.get('/api/reportes/menos-vendidos?limite=100');
   assert.ok(!sinBorrador.body.ranking.some((x) => x.id_producto === borrador.id_producto));
 });
@@ -129,18 +133,18 @@ test('resumen de ventas: totales, ticket promedio y serie diaria con ceros', asy
   const r = await api.get('/api/reportes/ventas');
   assert.equal(r.status, 200);
   // Vendidos: A y B. Sin ventas: activos con stock que no vendieron (C y E; D y B están inactivos).
-  assert.deepEqual(r.body.totales, { ventas: 2, unidades: 6, productos_vendidos: 2, productos_sin_ventas: 2, ingresos: 140000, ticket_promedio: 70000 });
+  assert.deepEqual(r.body.totales, { ventas: 2, unidades: 6, productos_vendidos: 2, productos_sin_ventas: 2, ingresos: 120000, ticket_promedio: 60000 });
   assert.equal(r.body.por_dia.length, 30);
   assert.equal(r.body.por_dia[0].fecha, diasAntes(hoy, 29));
   assert.equal(r.body.por_dia[29].fecha, hoy);
   const dia = (f) => r.body.por_dia.find((d) => d.fecha === f);
-  assert.deepEqual(dia(hoy), { fecha: hoy, ventas: 1, unidades: 4, ingresos: 100000 });
+  assert.deepEqual(dia(hoy), { fecha: hoy, ventas: 1, unidades: 4, ingresos: 80000 });
   assert.deepEqual(dia(diasAntes(hoy, 2)), { fecha: diasAntes(hoy, 2), ventas: 1, unidades: 2, ingresos: 40000 });
   assert.deepEqual(dia(diasAntes(hoy, 1)), { fecha: diasAntes(hoy, 1), ventas: 0, unidades: 0, ingresos: 0 });
-  assert.equal(r.body.por_dia.reduce((s, d) => s + d.ingresos, 0), 140000);
-  assert.deepEqual(r.body.por_presentacion.map((p) => [p.presentacion_ml, p.unidades, p.ingresos]), [[30, 5, 100000], [60, 1, 40000]]);
+  assert.equal(r.body.por_dia.reduce((s, d) => s + d.ingresos, 0), 120000);
   assert.equal(r.body.por_categoria[0].categoria, 'Caballero');
-  assert.equal(r.body.por_categoria[0].ingresos, 140000);
+  assert.equal(r.body.por_categoria[0].ingresos, 120000);
+  assert.equal(r.body.por_presentacion, undefined, 'ya no hay desglose por presentación: solo se vende 30 ml');
 });
 
 test('resumen de ventas de un rango sin ventas devuelve ceros y no divide entre cero', async () => {
@@ -148,7 +152,7 @@ test('resumen de ventas de un rango sin ventas devuelve ceros y no divide entre 
   // Sin ventas en el rango: todos los activos con stock (A, C y E) figuran como sin ventas.
   assert.deepEqual(r.body.totales, { ventas: 0, unidades: 0, productos_vendidos: 0, productos_sin_ventas: 3, ingresos: 0, ticket_promedio: 0 });
   assert.equal(r.body.por_dia.length, 11);
-  assert.deepEqual(r.body.por_presentacion, []);
+  assert.deepEqual(r.body.por_categoria, []);
 });
 
 test('resumen de caja por día con la diferencia del cierre y totales', async () => {
@@ -167,13 +171,13 @@ test('resumen de caja por día con la diferencia del cierre y totales', async ()
   assert.equal(actual.estado, 'abierta');
   assert.equal(actual.diferencia, null);
   assert.equal(actual.ventas, 3);
-  assert.equal(actual.ingresos_por_ventas, 180000);
-  assert.equal(actual.saldo_esperado, 190000);
+  assert.equal(actual.ingresos_por_ventas, 140000);
+  assert.equal(actual.saldo_esperado, 150000);
   assert.deepEqual(r.body.totales, {
     cajas: 2,
     ventas: 3,
-    ingresos: 180000,
-    ingresos_por_ventas: 180000,
+    ingresos: 140000,
+    ingresos_por_ventas: 140000,
     egresos: 0,
     diferencia: -200,
     cajas_sin_cerrar: 1,
@@ -193,7 +197,6 @@ test('valida el rango y los parámetros de los reportes', async () => {
   assert.equal((await api.get('/api/reportes/mas-vendidos?limite=0')).status, 400);
   assert.equal((await api.get('/api/reportes/mas-vendidos?limite=101')).status, 400);
   assert.equal((await api.get('/api/reportes/mas-vendidos?agrupar=color')).status, 400);
-  assert.equal((await api.get('/api/reportes/mas-vendidos?presentacion=45')).status, 400);
   assert.equal((await api.get('/api/reportes/menos-vendidos?solo_con_ventas=quizas')).status, 400);
   assert.equal((await api.get("/api/reportes/mas-vendidos?categoria=1;DROP TABLE venta")).status, 400);
   const [[{ n }]] = await sequelize.query('SELECT COUNT(*)::int AS n FROM venta');

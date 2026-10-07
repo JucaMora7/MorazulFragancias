@@ -76,14 +76,13 @@ function GraficaDiaria({ dias }) {
 
 export default function Reportes() {
   const [periodo, setPeriodo] = useState('30');
-  const [agrupar, setAgrupar] = useState('producto');
   const hasta = hoyISO();
   const desde = sumarDias(hasta, -PERIODOS[periodo]);
   const rango = { desde, hasta };
 
   const ventas = useCarga(() => api('/api/reportes/ventas', { consulta: rango }), [desde, hasta]);
-  const mas = useCarga(() => api('/api/reportes/mas-vendidos', { consulta: { ...rango, limite: 5, agrupar } }), [desde, hasta, agrupar]);
-  const menos = useCarga(() => api('/api/reportes/menos-vendidos', { consulta: { ...rango, limite: 5, agrupar } }), [desde, hasta, agrupar]);
+  const mas = useCarga(() => api('/api/reportes/mas-vendidos', { consulta: { ...rango, limite: 5 } }), [desde, hasta]);
+  const menos = useCarga(() => api('/api/reportes/menos-vendidos', { consulta: { ...rango, limite: 5 } }), [desde, hasta]);
 
   const todas = [ventas, mas, menos];
   const error = todas.find((c) => c.error)?.error;
@@ -99,15 +98,6 @@ export default function Reportes() {
           <p className="tenue">{rangoTexto(desde, hasta)}</p>
         </div>
         <div className="pagina__acciones">
-          <Segmentado
-            etiqueta="Agrupar por"
-            valor={agrupar}
-            onCambiar={setAgrupar}
-            opciones={[
-              { valor: 'producto', texto: 'Presentación' },
-              { valor: 'fragancia', texto: 'Fragancia' },
-            ]}
-          />
           <Segmentado
             etiqueta="Periodo"
             valor={periodo}

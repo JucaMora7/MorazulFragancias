@@ -1,4 +1,4 @@
-// Productos = presentaciones vendibles (30, 60 o 100 ml) de cada fragancia.
+// Productos = presentación vendible de cada fragancia (hoy el negocio solo vende 30 ml).
 const express = require('express');
 const { QueryTypes } = require('sequelize');
 const { sequelize, Producto, Fragancia } = require('../modelos');
@@ -54,10 +54,6 @@ router.get('/', async (req, res) => {
   if (req.query.categoria !== undefined) {
     reemplazos.categoria = entero(req.query.categoria, 'categoria', { min: 1 });
     condiciones.push('id_categoria = :categoria');
-  }
-  if (req.query.presentacion !== undefined) {
-    reemplazos.presentacion = opcion(entero(req.query.presentacion, 'presentacion'), 'presentacion', [30, 60, 100]);
-    condiciones.push('presentacion_ml = :presentacion');
   }
   if (req.query.estado !== undefined) {
     reemplazos.estado = opcion(req.query.estado, 'estado', ESTADOS);
@@ -136,7 +132,7 @@ async function aplicarTransicion(p, accion, t, idUsuario) {
 
   if (accion === 'activar' || accion === 'publicar') {
     if (!(Number(p.precio_venta) > 0)) {
-      throw reglaDeNegocio(`Fija el precio de la presentación de ${p.presentacion_ml} ml antes de ${accion === 'publicar' ? 'publicarla' : 'activarla'}`);
+      throw reglaDeNegocio(`Fija el precio del producto antes de ${accion === 'publicar' ? 'publicarlo' : 'activarlo'}`);
     }
     const f = await Fragancia.findByPk(p.id_fragancia, { transaction: t });
     if (!f.activa) throw reglaDeNegocio('La fragancia está inactiva: reactívala primero');

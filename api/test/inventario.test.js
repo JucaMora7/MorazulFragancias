@@ -11,17 +11,23 @@ before(async () => {
 });
 after(cerrar);
 
-const producto = async (codigo, ml) => (await api.get(`/api/productos?q=${codigo}&presentacion=${ml}`)).body.productos[0];
+const producto = async (codigo) => (await api.get(`/api/productos?q=${codigo}`)).body.productos[0];
 const mover = (id, datos) => api.post('/api/inventario/movimientos').send({ id_producto: id, ...datos });
+const crearFragancia = async (nombre) => {
+  const caballero = (await api.get('/api/categorias')).body.categorias.find((c) => c.nombre === 'Caballero');
+  const r = await api.post('/api/fragancias').send({ nombre, id_categoria: caballero.id_categoria });
+  assert.equal(r.status, 201);
+  return r.body.fragancia;
+};
 
 test('una entrada suma existencias y deja el movimiento en el libro con quién lo hizo', async () => {
-  const p = await producto('CAB-001', 30);
+  const p = await producto('CAB-001');
   const r = await mover(p.id_producto, { tipo: 'entrada', cantidad: 10, motivo: 'Compra al proveedor' });
   assert.equal(r.status, 201);
   assert.equal(r.body.movimiento.cantidad, 10);
   assert.equal(r.body.movimiento.existencias_resultantes, 10);
   assert.equal(r.body.producto.existencias, 10);
-  assert.equal((await producto('CAB-001', 30)).existencias, 10);
+  assert.equal((await producto('CAB-001')).existencias, 10);
 
   const libro = await api.get(`/api/inventario/movimientos?producto=${p.id_producto}`);
   assert.equal(libro.body.total, 1);
@@ -30,7 +36,7 @@ test('una entrada suma existencias y deja el movimiento en el libro con quién l
 });
 
 test('el motivo es opcional en entradas y obligatorio en ajustes', async () => {
-  const p = await producto('CAB-001', 30);
+  const p = await producto('CAB-001');
   assert.equal((await mover(p.id_producto, { tipo: 'entrada', cantidad: 1 })).status, 201);
   const sinMotivo = await mover(p.id_producto, { tipo: 'ajuste', cantidad: -1 });
   assert.equal(sinMotivo.status, 400);
@@ -40,15 +46,15 @@ test('el motivo es opcional en entradas y obligatorio en ajustes', async () => {
 });
 
 test('no deja las existencias en negativo y no cambia nada al rechazar', async () => {
-  const p = await producto('CAB-001', 30);
+  const p = await producto('CAB-001');
   const r = await mover(p.id_producto, { tipo: 'ajuste', cantidad: -11, motivo: 'Conteo' });
   assert.equal(r.status, 422);
   assert.match(r.body.error.mensaje, /insuficientes/i);
-  assert.equal((await producto('CAB-001', 30)).existencias, 10);
+  assert.equal((await producto('CAB-001')).existencias, 10);
 });
 
 test('valida tipo, cantidad y campos de un movimiento', async () => {
-  const p = await producto('CAB-001', 30);
+  const p = await producto('CAB-001');
   assert.equal((await mover(p.id_producto, { tipo: 'venta', cantidad: -1, motivo: 'x' })).status, 400);
   assert.equal((await mover(p.id_producto, { tipo: 'entrada', cantidad: 0 })).status, 400);
   assert.equal((await mover(p.id_producto, { tipo: 'entrada', cantidad: -3 })).status, 400);
@@ -60,18 +66,19 @@ test('valida tipo, cantidad y campos de un movimiento', async () => {
 });
 
 test('no se mueve el inventario de un producto inactivo, pero sí el de uno en borrador', async () => {
-  const borrador = await producto('CAB-002', 100);
+  const f = await crearFragancia('prueba en borrador');
+  const borrador = f.presentaciones[0];
   assert.equal(borrador.estado, 'borrador');
   assert.equal((await mover(borrador.id_producto, { tipo: 'entrada', cantidad: 4 })).status, 201);
 
-  const p = await producto('CAB-002', 30);
+  const p = await producto('CAB-002');
   await api.post(`/api/productos/${p.id_producto}/inactivar`);
   const r = await mover(p.id_producto, { tipo: 'entrada', cantidad: 5 });
   assert.equal(r.status, 422);
 });
 
 test('la alerta de stock crítico se crea al llegar al umbral y se resuelve al reponer', async () => {
-  const p = await producto('CAB-003', 60);
+  const p = await producto('CAB-003');
   await api.patch(`/api/productos/${p.id_producto}`).send({ umbral_minimo: 3 });
   await mover(p.id_producto, { tipo: 'entrada', cantidad: 10 });
   assert.equal((await api.get('/api/alertas?estado=activa')).body.alertas.filter((a) => a.id_producto === p.id_producto).length, 0);
@@ -97,17 +104,17 @@ test('la alerta de stock crítico se crea al llegar al umbral y se resuelve al r
 });
 
 test('filtros y estado de stock: Normal, Crítico, Agotado, Inactivo y Borrador', async () => {
-  const critico = await producto('CAB-004', 60);
+  const critico = await producto('CAB-004');
   await api.patch(`/api/productos/${critico.id_producto}`).send({ umbral_minimo: 5 });
   await mover(critico.id_producto, { tipo: 'entrada', cantidad: 4 });
-  const normal = await producto('CAB-005', 60);
+  const normal = await producto('CAB-005');
   await mover(normal.id_producto, { tipo: 'entrada', cantidad: 8 });
 
-  assert.equal((await producto('CAB-004', 60)).estado_stock, 'Crítico');
-  assert.equal((await producto('CAB-005', 60)).estado_stock, 'Normal');
-  assert.equal((await producto('CAB-006', 60)).estado_stock, 'Agotado');
-  assert.equal((await producto('CAB-002', 30)).estado_stock, 'Inactivo');
-  assert.equal((await producto('CAB-006', 100)).estado_stock, 'Borrador');
+  assert.equal((await producto('CAB-004')).estado_stock, 'Crítico');
+  assert.equal((await producto('CAB-005')).estado_stock, 'Normal');
+  assert.equal((await producto('CAB-006')).estado_stock, 'Agotado');
+  assert.equal((await producto('CAB-002')).estado_stock, 'Inactivo');
+  assert.equal((await producto('CAB-049')).estado_stock, 'Borrador');
 
   const criticos = await api.get('/api/productos?stock=critico&limite=200');
   assert.ok(criticos.body.productos.some((p) => p.id_producto === critico.id_producto));
@@ -129,8 +136,8 @@ test('el resumen cuenta productos activos, críticos, agotados, borradores e ina
   assert.equal(r.status, 200);
   const x = r.body.resumen;
   assert.equal(x.inactivos, 1);
-  assert.equal(x.borradores, 125);
-  assert.equal(x.activos + x.borradores + x.inactivos, 375);
+  assert.equal(x.borradores, 1);
+  assert.equal(x.activos + x.borradores + x.inactivos, 126);
   assert.ok(x.criticos >= 1);
   assert.ok(x.agotados >= 1);
   assert.ok(x.unidades_en_stock > 0);
@@ -153,18 +160,18 @@ test('el libro no se puede alterar desde la base: ni editar ni borrar movimiento
   await assert.rejects(sequelize.query('DELETE FROM movimiento_inventario'));
 });
 
-test('poner el precio de un 100 ml y publicarlo en un solo paso; si falla, no se guarda el precio', async () => {
-  const p = await producto('CAB-007', 100);
-  const ok = await api.patch(`/api/productos/${p.id_producto}`).send({ precio_venta: 85000, publicar: true });
+test('poner el precio de un producto en borrador y publicarlo en un solo paso; si falla, no se guarda el precio', async () => {
+  const p = await producto('CAB-049');
+  const ok = await api.patch(`/api/productos/${p.id_producto}`).send({ precio_venta: 25000, publicar: true });
   assert.equal(ok.status, 200);
-  assert.equal(ok.body.producto.precio_venta, 85000);
+  assert.equal(ok.body.producto.precio_venta, 25000);
   assert.equal(ok.body.producto.estado, 'activo');
   assert.equal(ok.body.producto.visible_landing, true);
 
-  const otro = await producto('CAB-008', 100);
-  await sequelize.query("UPDATE fragancia SET activa = FALSE WHERE codigo = 'CAB-008'");
-  const falla = await api.patch(`/api/productos/${otro.id_producto}`).send({ precio_venta: 90000, publicar: true });
+  const otra = await crearFragancia('otra prueba en borrador');
+  await sequelize.query('UPDATE fragancia SET activa = FALSE WHERE codigo = :codigo', { replacements: { codigo: otra.codigo } });
+  const falla = await api.patch(`/api/productos/${otra.presentaciones[0].id_producto}`).send({ precio_venta: 30000, publicar: true });
   assert.equal(falla.status, 422);
-  assert.equal((await producto('CAB-008', 100)).precio_venta, null);
+  assert.equal((await producto(otra.codigo)).precio_venta, 20000);
   assert.equal((await api.patch(`/api/productos/${p.id_producto}`).send({ publicar: true, activar: true })).status, 400);
 });

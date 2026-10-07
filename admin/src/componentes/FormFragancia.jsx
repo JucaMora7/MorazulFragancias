@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { pesos } from '../util/formato.js';
 import { api } from '../api/cliente.js';
 import { useCarga } from '../util/ganchos.js';
 import { useAvisos } from './Avisos.jsx';
@@ -24,7 +25,6 @@ function Formulario({ fragancia, categorias, onCerrar, onGuardada }) {
   const [categoria, setCategoria] = useState(fragancia ? String(fragancia.id_categoria) : '');
   const [inspirada, setInspirada] = useState(fragancia?.inspirada_en ?? '');
   const [arabe, setArabe] = useState(fragancia?.es_arabe ?? false);
-  const [color, setColor] = useState(fragancia?.color_caja ?? '');
   const [nota, setNota] = useState(fragancia?.nota ?? '');
   const [codigo, setCodigo] = useState('');
   const [pedirCodigo, setPedirCodigo] = useState(false);
@@ -90,7 +90,7 @@ function Formulario({ fragancia, categorias, onCerrar, onGuardada }) {
     setEnviando(true);
     try {
       await api(`/api/fragancias/${fragancia.id_fragancia}/${activa ? 'inactivar' : 'reactivar'}`, { metodo: 'POST' });
-      avisos.mostrar(activa ? 'Fragancia inactivada con todas sus presentaciones.' : 'Fragancia reactivada. Sus presentaciones quedaron en borrador.');
+      avisos.mostrar(activa ? 'Fragancia inactivada.' : 'Fragancia reactivada. Su producto quedó en borrador.');
       onGuardada(true);
     } catch (err) {
       setError(err.message);
@@ -109,7 +109,6 @@ function Formulario({ fragancia, categorias, onCerrar, onGuardada }) {
       id_categoria: Number(categoria),
       inspirada_en: inspirada.trim() || null,
       es_arabe: arabe,
-      color_caja: color || null,
       nota: nota.trim() || null,
     };
     setEnviando(true);
@@ -119,7 +118,7 @@ function Formulario({ fragancia, categorias, onCerrar, onGuardada }) {
         avisos.mostrar('Fragancia actualizada.');
       } else {
         const r = await api('/api/fragancias', { metodo: 'POST', cuerpo: { ...datos, ...(codigo.trim() ? { codigo: codigo.trim() } : {}) } });
-        let mensaje = `Fragancia ${r.fragancia.codigo} creada. Sus presentaciones quedaron en borrador: fija el precio y publícalas.`;
+        let mensaje = `Fragancia ${r.fragancia.codigo} creada. Su producto de 30 ml quedó en borrador con precio ${pesos(r.fragancia.presentaciones[0]?.precio_venta)}: publícalo cuando esté listo.`;
         if (fotoNueva) {
           try {
             await subirFoto(r.fragancia.id_fragancia, fotoNueva);
@@ -140,21 +139,14 @@ function Formulario({ fragancia, categorias, onCerrar, onGuardada }) {
   return (
     <form onSubmit={guardar} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <Campo etiqueta="Nombre" maxLength={80} value={nombre} onChange={(e) => setNombre(e.target.value)} />
-      <div className="fila-campos">
-        <CampoSelect etiqueta="Categoría" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-          <option value="">Elige una categoría</option>
-          {categorias.map((c) => (
-            <option key={c.id_categoria} value={c.id_categoria}>
-              {c.nombre}
-            </option>
-          ))}
-        </CampoSelect>
-        <CampoSelect etiqueta="Color de la caja" value={color} onChange={(e) => setColor(e.target.value)} ayuda="Define la imagen genérica de 60 y 100 ml.">
-          <option value="">Sin definir</option>
-          <option value="azul">Azul</option>
-          <option value="morada">Morada</option>
-        </CampoSelect>
-      </div>
+      <CampoSelect etiqueta="Categoría" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+        <option value="">Elige una categoría</option>
+        {categorias.map((c) => (
+          <option key={c.id_categoria} value={c.id_categoria}>
+            {c.nombre}
+          </option>
+        ))}
+      </CampoSelect>
       <Campo etiqueta="Inspirada en (marca de referencia)" maxLength={80} value={inspirada} onChange={(e) => setInspirada(e.target.value)} ayuda="Solo se muestra en la landing si lo activas en los ajustes del catálogo." />
       <label className="casilla">
         <input type="checkbox" checked={arabe} onChange={(e) => setArabe(e.target.checked)} />
@@ -194,8 +186,8 @@ function Formulario({ fragancia, categorias, onCerrar, onGuardada }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <Mensaje tipo="aviso">
                 {activa
-                  ? 'Se inactivarán las tres presentaciones y saldrán de la landing y de las ventas. El historial se conserva.'
-                  : 'Las presentaciones volverán como borrador: tendrás que publicarlas de nuevo.'}
+                  ? 'Saldrá de la landing y de las ventas. El historial se conserva.'
+                  : 'Volverá como borrador: tendrás que publicarla de nuevo.'}
               </Mensaje>
               <div style={{ display: 'flex', gap: 12 }}>
                 <Boton variante="secundario" onClick={() => setConfirmando(false)}>

@@ -74,7 +74,7 @@ router.get('/:id', async (req, res) => {
   res.json({ fragancia: f });
 });
 
-// Crea la fragancia y sus tres presentaciones en borrador (30 y 60 ml con su precio fijo; 100 ml sin precio).
+// Crea la fragancia y su presentación de 30 ml en borrador, con el precio inicial del negocio.
 router.post('/', async (req, res) => {
   const b = cuerpo(req);
   rechazarDesconocidos(b, ['nombre', 'id_categoria', 'inspirada_en', 'es_arabe', 'color_caja', 'nota', 'codigo']);
@@ -87,20 +87,18 @@ router.post('/', async (req, res) => {
     const codigo = codigoIndicado || (await servicio.siguienteCodigo(datos.id_categoria, t));
     if (!codigo) throw validacion('Indica el código de la fragancia: esta categoría aún no tiene ninguna');
     const f = await Fragancia.create({ es_arabe: false, ...datos, codigo, activa: true }, { transaction: t });
-    for (const ml of [30, 60, 100]) {
-      await Producto.create(
-        {
-          id_fragancia: f.id_fragancia,
-          presentacion_ml: ml,
-          precio_venta: config.preciosIniciales[ml],
-          estado: 'borrador',
-          visible_landing: false,
-          existencias: 0,
-          umbral_minimo: 0,
-        },
-        { transaction: t }
-      );
-    }
+    await Producto.create(
+      {
+        id_fragancia: f.id_fragancia,
+        presentacion_ml: 30,
+        precio_venta: config.precioInicial30ml,
+        estado: 'borrador',
+        visible_landing: false,
+        existencias: 0,
+        umbral_minimo: 0,
+      },
+      { transaction: t }
+    );
     await auditar(t, req.usuario.id, 'fragancia', f.id_fragancia, 'crear', { codigo, nombre: f.nombre });
     return f.id_fragancia;
   });
@@ -124,7 +122,7 @@ router.patch('/:id', async (req, res) => {
   res.json({ fragancia: await servicio.obtener(id) });
 });
 
-// Una fragancia no se borra: se inactiva y con ella todas sus presentaciones.
+// Una fragancia no se borra: se inactiva y con ella su producto.
 router.post('/:id/inactivar', async (req, res) => {
   const id = idDe(req);
   await sequelize.transaction(async (t) => {
@@ -136,7 +134,7 @@ router.post('/:id/inactivar', async (req, res) => {
   res.json({ fragancia: await servicio.obtener(id) });
 });
 
-// Reactivar devuelve las presentaciones a borrador: el administrador decide qué vuelve a publicar.
+// Reactivar devuelve el producto a borrador: el administrador decide cuándo volver a publicarlo.
 router.post('/:id/reactivar', async (req, res) => {
   const id = idDe(req);
   await sequelize.transaction(async (t) => {

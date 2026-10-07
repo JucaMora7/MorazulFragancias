@@ -5,7 +5,7 @@ const config = require('../config');
 const { sequelize } = require('../modelos');
 const almacenamiento = require('../servicios/almacenamiento');
 const { noEncontrado } = require('../utilidades/errores');
-const { entero, booleano, opcion, paginacion, patronBusqueda } = require('../utilidades/validar');
+const { entero, booleano, paginacion, patronBusqueda } = require('../utilidades/validar');
 const { QueryTypes } = require('sequelize');
 
 const router = express.Router();
@@ -53,11 +53,6 @@ router.get('/catalogo', async (req, res) => {
   }
   if (req.query.arabes !== undefined && booleano(req.query.arabes, 'arabes')) {
     condiciones.push('v.es_arabe');
-  }
-  if (req.query.presentacion !== undefined) {
-    reemplazos.presentacion = entero(req.query.presentacion, 'presentacion');
-    opcion(reemplazos.presentacion, 'presentacion', [30, 60, 100]);
-    condiciones.push('v.codigo IN (SELECT codigo FROM v_catalogo_publico WHERE presentacion_ml = :presentacion)');
   }
   if (req.query.q !== undefined) {
     reemplazos.q = patronBusqueda(req.query.q);
