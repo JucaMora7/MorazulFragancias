@@ -54,7 +54,8 @@ test('registra una venta: total con precios de la base, salida de inventario, in
   const caja = await api.get('/api/caja/hoy');
   assert.equal(caja.body.caja.ingresos, 80000);
   assert.equal(caja.body.caja.saldo_esperado, 100000);
-  assert.ok(caja.body.movimientos.some((m) => m.id_venta === v.id_venta && m.valor === 80000));
+  assert.ok(caja.body.movimientos.some((m) => m.id_venta === v.id_venta && m.valor === 80000 && m.productos === 2));
+  assert.equal(caja.body.movimientos.find((m) => m.id_venta === null)?.productos ?? 0, 0);
 
   const libro = await api.get(`/api/inventario/movimientos?tipo=venta&producto=${a.id_producto}`);
   assert.equal(libro.body.movimientos[0].cantidad, -2);

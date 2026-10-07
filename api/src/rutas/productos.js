@@ -63,6 +63,9 @@ router.get('/', async (req, res) => {
     reemplazos.estado = opcion(req.query.estado, 'estado', ESTADOS);
     condiciones.push('estado = :estado');
   }
+  if (req.query.con_stock !== undefined && booleano(req.query.con_stock, 'con_stock')) {
+    condiciones.push("estado = 'activo' AND existencias > 0");
+  }
   if (req.query.stock !== undefined) {
     condiciones.push(FILTROS_STOCK[opcion(req.query.stock, 'stock', Object.keys(FILTROS_STOCK))]);
   }

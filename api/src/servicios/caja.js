@@ -32,12 +32,15 @@ const serializar = (c) => ({
   egresos: num(c.egresos),
   saldo_esperado: num(c.saldo_esperado),
   saldo_cierre: num(c.saldo_cierre),
+  abierta_en: c.abierta_en,
+  cerrada_en: c.cerrada_en,
 });
 
 async function resumen(idCaja, transaccion) {
   const [fila] = await sequelize.query(
-    `SELECT id_caja, to_char(fecha, 'YYYY-MM-DD') AS fecha, estado, saldo_apertura, ingresos, egresos, saldo_esperado, saldo_cierre
-       FROM v_resumen_caja WHERE id_caja = :idCaja`,
+    `SELECT r.id_caja, to_char(r.fecha, 'YYYY-MM-DD') AS fecha, r.estado, r.saldo_apertura, r.ingresos, r.egresos,
+            r.saldo_esperado, r.saldo_cierre, c.abierta_en, c.cerrada_en
+       FROM v_resumen_caja r JOIN caja_diaria c USING (id_caja) WHERE r.id_caja = :idCaja`,
     { replacements: { idCaja }, type: QueryTypes.SELECT, transaction: transaccion }
   );
   return fila ? serializar(fila) : null;
@@ -45,7 +48,8 @@ async function resumen(idCaja, transaccion) {
 
 async function movimientos(idCaja, transaccion) {
   const filas = await sequelize.query(
-    `SELECT m.id_mov_caja, m.tipo, m.concepto, m.valor, m.id_venta, m.fecha_hora, u.nombre AS usuario
+    `SELECT m.id_mov_caja, m.tipo, m.concepto, m.valor, m.id_venta, m.fecha_hora, u.nombre AS usuario,
+            (SELECT COUNT(*)::int FROM detalle_venta dv WHERE dv.id_venta = m.id_venta) AS productos
        FROM movimiento_caja m JOIN usuario u USING (id_usuario)
       WHERE m.id_caja = :idCaja ORDER BY m.fecha_hora, m.id_mov_caja`,
     { replacements: { idCaja }, type: QueryTypes.SELECT, transaction: transaccion }

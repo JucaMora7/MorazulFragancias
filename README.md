@@ -48,7 +48,12 @@ Los comandos se completan a medida que avanzan las etapas.
    - Reportes (`/api/reportes`): `mas-vendidos`, `menos-vendidos` (productos con stock que no rotan), `ventas` (totales y serie diaria) y `caja` (resumen por día con la diferencia del cierre). Reciben `desde` y `hasta` (AAAA-MM-DD, por defecto los últimos 30 días, máximo 366).
    - `db/reconstruir.sh` borra y reconstruye la base: se niega si ya tiene datos de trabajo (usuarios, ventas, movimientos o cajas). Para forzarlo, `FORZAR=si`.
    - Las fotos subidas se guardan en `api/uploads/` (fuera de Git); las imágenes genéricas van en `api/uploads/genericas/` con los nombres de `docs/03-datos-y-catalogo.md`.
-3. **Panel de administración:** disponible en la etapa 6.
+3. **Panel de administración** (desde la carpeta `admin/`):
+   - Instalar dependencias: `npm install`.
+   - Con la API en marcha, levantarlo: `npm run dev` (abre en http://localhost:5173). Lee `VITE_API_URL` del `.env` de la raíz (por defecto http://localhost:3000).
+   - Iniciar sesión con el administrador creado con `npm run crear-admin` en `api/`.
+   - Pruebas: `npm test`. Compilar para producción: `npm run build` (queda en `admin/dist/`).
+   - Se ve en celular y en escritorio; en celular el menú inferior tiene Inicio, Productos, Vender, Caja y Alertas, y el resto está en el menú lateral.
 4. **Landing:** disponible en la etapa 7.
 
 ## Etapas

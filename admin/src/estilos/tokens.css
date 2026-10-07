@@ -1,0 +1,40 @@
+/* Tokens tomados del archivo de Figma "Morazul - Prototipo" (página Fundamentos). */
+:root {
+  --brand-900: #0a0449;
+  --brand-700: #2a1f8f;
+  --brand-500: #6b5ee0;
+  --brand-100: #e2defa;
+  --brand-50: #f1effc;
+
+  --ink-900: #1b1a2e;
+  --ink-600: #5c5b70;
+  --ink-400: #8e8da0;
+
+  --line-default: #e3e2ec;
+  --line-strong: #c9c8d6;
+
+  --surface-page: #f6f6fa;
+  --surface-white: #ffffff;
+
+  --ok: #18794e;
+  --ok-bg: #e7f5ee;
+  --warning: #b45309;
+  --warning-bg: #fef3e2;
+  --danger: #b42318;
+  --danger-bg: #fdecea;
+
+  /* El degradado de marca solo se usa en el panel de marca del inicio de sesión. */
+  --degradado-marca: linear-gradient(to top, #0a0449, #4d42b1);
+
+  --radio-campo: 8px;
+  --radio-tarjeta: 12px;
+  --radio-pildora: 999px;
+
+  --altura-control: 44px;
+  --ancho-menu: 248px;
+  --alto-barra: 64px;
+  --alto-barra-movil: 56px;
+  --alto-nav-movil: 64px;
+
+  --fuente: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}

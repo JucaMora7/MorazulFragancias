@@ -128,7 +128,8 @@ test('un producto que se vendió y hoy está inactivo sigue figurando en lo más
 test('resumen de ventas: totales, ticket promedio y serie diaria con ceros', async () => {
   const r = await api.get('/api/reportes/ventas');
   assert.equal(r.status, 200);
-  assert.deepEqual(r.body.totales, { ventas: 2, unidades: 6, ingresos: 140000, ticket_promedio: 70000 });
+  // Vendidos: A y B. Sin ventas: activos con stock que no vendieron (C y E; D y B están inactivos).
+  assert.deepEqual(r.body.totales, { ventas: 2, unidades: 6, productos_vendidos: 2, productos_sin_ventas: 2, ingresos: 140000, ticket_promedio: 70000 });
   assert.equal(r.body.por_dia.length, 30);
   assert.equal(r.body.por_dia[0].fecha, diasAntes(hoy, 29));
   assert.equal(r.body.por_dia[29].fecha, hoy);
@@ -144,7 +145,8 @@ test('resumen de ventas: totales, ticket promedio y serie diaria con ceros', asy
 
 test('resumen de ventas de un rango sin ventas devuelve ceros y no divide entre cero', async () => {
   const r = await api.get(`/api/reportes/ventas?desde=${diasAntes(hoy, 20)}&hasta=${diasAntes(hoy, 10)}`);
-  assert.deepEqual(r.body.totales, { ventas: 0, unidades: 0, ingresos: 0, ticket_promedio: 0 });
+  // Sin ventas en el rango: todos los activos con stock (A, C y E) figuran como sin ventas.
+  assert.deepEqual(r.body.totales, { ventas: 0, unidades: 0, productos_vendidos: 0, productos_sin_ventas: 3, ingresos: 0, ticket_promedio: 0 });
   assert.equal(r.body.por_dia.length, 11);
   assert.deepEqual(r.body.por_presentacion, []);
 });

@@ -115,8 +115,19 @@ router.get('/ventas', async (req, res) => {
   const [totales] = await sequelize.query(
     `SELECT COUNT(DISTINCT v.id_venta)::int AS ventas,
             COALESCE(SUM(dv.cantidad), 0)::int AS unidades,
-            COALESCE(SUM(dv.subtotal), 0) AS ingresos
+            COALESCE(SUM(dv.subtotal), 0) AS ingresos,
+            COUNT(DISTINCT dv.id_producto)::int AS productos_vendidos
        FROM venta v JOIN detalle_venta dv USING (id_venta) WHERE ${rango}`,
+    { replacements: reemplazos, type: QueryTypes.SELECT }
+  );
+  // Productos activos con existencias que no vendieron nada en el periodo (inventario parado).
+  const [{ sin_ventas: productosSinVentas }] = await sequelize.query(
+    `SELECT COUNT(*)::int AS sin_ventas
+       FROM producto p
+      WHERE p.estado = 'activo' AND p.existencias > 0
+        AND NOT EXISTS (
+            SELECT 1 FROM detalle_venta dv JOIN venta v USING (id_venta)
+             WHERE dv.id_producto = p.id_producto AND ${rango})`,
     { replacements: reemplazos, type: QueryTypes.SELECT }
   );
   const serie = await sequelize.query(
@@ -151,6 +162,8 @@ router.get('/ventas', async (req, res) => {
     totales: {
       ventas: totales.ventas,
       unidades: totales.unidades,
+      productos_vendidos: totales.productos_vendidos,
+      productos_sin_ventas: productosSinVentas,
       ingresos,
       ticket_promedio: totales.ventas ? Math.round((ingresos / totales.ventas) * 100) / 100 : 0,
     },

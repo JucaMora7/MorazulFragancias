@@ -33,6 +33,8 @@ test('abre la caja con su saldo inicial y deja auditoría', async () => {
   assert.equal(r.body.caja.saldo_apertura, 50000);
   assert.equal(r.body.caja.saldo_esperado, 50000);
   assert.equal(r.body.caja.saldo_cierre, null);
+  assert.ok(r.body.caja.abierta_en);
+  assert.equal(r.body.caja.cerrada_en, null);
   const [[a]] = await sequelize.query("SELECT accion, id_usuario FROM auditoria WHERE entidad = 'caja' ORDER BY id_auditoria DESC LIMIT 1");
   assert.equal(a.accion, 'crear');
   assert.equal(a.id_usuario, ctx.admin.id_usuario);
@@ -82,6 +84,7 @@ test('cierra la caja con el efectivo contado e informa la diferencia', async () 
   assert.equal(r.body.caja.saldo_esperado, 55000);
   assert.equal(r.body.caja.saldo_cierre, 54500);
   assert.equal(r.body.diferencia, -500);
+  assert.ok(r.body.caja.cerrada_en);
   const [[a]] = await sequelize.query("SELECT detalle FROM auditoria WHERE entidad = 'caja' AND accion = 'editar' AND detalle->>'cambio' = 'cerrar'");
   assert.equal(a.detalle.diferencia, -500);
 });

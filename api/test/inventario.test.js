@@ -115,6 +115,13 @@ test('filtros y estado de stock: Normal, Crítico, Agotado, Inactivo y Borrador'
   const agotados = await api.get('/api/productos?stock=agotado&limite=200');
   assert.ok(agotados.body.productos.every((p) => p.estado_stock === 'Agotado'));
   assert.equal((await api.get('/api/productos?stock=raro')).status, 400);
+
+  // con_stock: solo activos con existencias (lo que se puede vender).
+  const conStock = await api.get('/api/productos?con_stock=true&limite=200');
+  assert.ok(conStock.body.total >= 2);
+  assert.ok(conStock.body.productos.every((p) => p.estado === 'activo' && p.existencias > 0));
+  assert.ok(!conStock.body.productos.some((p) => p.id_producto === (agotados.body.productos[0] || {}).id_producto));
+  assert.equal((await api.get('/api/productos?con_stock=quizas')).status, 400);
 });
 
 test('el resumen cuenta productos activos, críticos, agotados, borradores e inactivos', async () => {
