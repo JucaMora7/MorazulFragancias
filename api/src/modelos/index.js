@@ -57,9 +57,69 @@ const Auditoria = sequelize.define('auditoria', {
   detalle: DataTypes.JSONB,
 });
 
+const CajaDiaria = sequelize.define('caja_diaria', {
+  id_caja: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  id_usuario: DataTypes.INTEGER,
+  fecha: DataTypes.DATEONLY,
+  saldo_apertura: DataTypes.DECIMAL(12, 2),
+  saldo_cierre: DataTypes.DECIMAL(12, 2),
+  estado: DataTypes.STRING(10),
+  cerrada_en: DataTypes.DATE,
+});
+
+const Venta = sequelize.define('venta', {
+  id_venta: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  id_caja: DataTypes.INTEGER,
+  id_usuario: DataTypes.INTEGER,
+  total: DataTypes.DECIMAL(12, 2),
+});
+
+// subtotal es una columna generada: la calcula la base y no se escribe.
+const DetalleVenta = sequelize.define('detalle_venta', {
+  id_detalle: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  id_venta: DataTypes.INTEGER,
+  id_producto: DataTypes.INTEGER,
+  cantidad: DataTypes.INTEGER,
+  precio_unitario: DataTypes.DECIMAL(12, 2),
+});
+
+// existencias_resultantes la calcula el disparador de la base.
+const MovimientoInventario = sequelize.define('movimiento_inventario', {
+  id_movimiento: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  id_producto: DataTypes.INTEGER,
+  id_usuario: DataTypes.INTEGER,
+  id_detalle: DataTypes.INTEGER,
+  tipo: DataTypes.STRING(10),
+  cantidad: DataTypes.INTEGER,
+  motivo: DataTypes.STRING(200),
+});
+
+const MovimientoCaja = sequelize.define('movimiento_caja', {
+  id_mov_caja: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  id_caja: DataTypes.INTEGER,
+  id_usuario: DataTypes.INTEGER,
+  id_venta: DataTypes.INTEGER,
+  tipo: DataTypes.STRING(10),
+  concepto: DataTypes.STRING(150),
+  valor: DataTypes.DECIMAL(12, 2),
+});
+
 Categoria.hasMany(Fragancia, { foreignKey: 'id_categoria' });
 Fragancia.belongsTo(Categoria, { foreignKey: 'id_categoria' });
 Fragancia.hasMany(Producto, { foreignKey: 'id_fragancia' });
 Producto.belongsTo(Fragancia, { foreignKey: 'id_fragancia' });
 
-module.exports = { sequelize, Usuario, Categoria, Fragancia, Producto, Configuracion, Auditoria };
+module.exports = {
+  sequelize,
+  Usuario,
+  Categoria,
+  Fragancia,
+  Producto,
+  Configuracion,
+  Auditoria,
+  CajaDiaria,
+  Venta,
+  DetalleVenta,
+  MovimientoInventario,
+  MovimientoCaja,
+};

@@ -146,6 +146,23 @@ BEGIN
     RAISE NOTICE 'OK  inventario, alertas, caja y ventas';
 END $$;
 
+-- 5b. Solo se venden productos activos y con precio (migración 004) --------
+DO $$
+DECLARE
+    v_usuario  integer;
+    v_caja     integer;
+    v_venta    integer;
+    v_borrador integer;
+BEGIN
+    SELECT id_usuario INTO v_usuario FROM usuario WHERE correo = 'prueba@morazul.test';
+    SELECT id_caja INTO v_caja FROM caja_diaria WHERE fecha = current_date;
+    UPDATE caja_diaria SET estado = 'abierta', saldo_cierre = NULL, cerrada_en = NULL WHERE id_caja = v_caja;
+    INSERT INTO venta (id_caja, id_usuario, total) VALUES (v_caja, v_usuario, 1000) RETURNING id_venta INTO v_venta;
+    SELECT id_producto INTO v_borrador FROM v_producto WHERE codigo = 'DAM-002' AND presentacion_ml = 100;
+    PERFORM pg_temp.debe_fallar(format('INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VALUES (%s, %s, 1, 1000)', v_venta, v_borrador), '23514');
+    RAISE NOTICE 'OK  no se vende un producto en borrador';
+END $$;
+
 -- 6. Interruptor "inspirada en" -------------------------------------------
 DO $$
 BEGIN

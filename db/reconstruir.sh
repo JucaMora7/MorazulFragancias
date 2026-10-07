@@ -24,6 +24,15 @@ if [ "${version:0:2}" != "16" ]; then
   exit 1
 fi
 
+# Protección: no borrar una base que ya tiene datos de trabajo (usuarios, ventas, movimientos).
+# Si la base está vacía o aún no tiene tablas, sigue sin preguntar.
+datos=$("$psql_bin" "${base[@]}" -At -c "SELECT CASE WHEN to_regclass('public.usuario') IS NULL THEN 0 ELSE (SELECT count(*) FROM usuario) + (SELECT count(*) FROM venta) + (SELECT count(*) FROM movimiento_inventario) + (SELECT count(*) FROM caja_diaria) END")
+if [ "$datos" != "0" ] && [ "${FORZAR:-}" != "si" ]; then
+  echo "La base $DB_NAME tiene datos de trabajo ($datos registros entre usuarios, ventas, movimientos y cajas)." >&2
+  echo "Reconstruirla los borraría. Si de verdad quieres hacerlo, ejecuta con FORZAR=si." >&2
+  exit 1
+fi
+
 echo "Reconstruyendo $DB_NAME en el puerto ${DB_PORT:-5432}..."
 PGOPTIONS="-c client_min_messages=warning" "$psql_bin" "${base[@]}" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 echo "  modelo v1"

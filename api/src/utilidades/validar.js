@@ -70,6 +70,32 @@ function precio(valor, campo, { requerido = true, nulable = false } = {}) {
   return n;
 }
 
+// Monto de dinero: cero o más (o mayor que cero), con dos decimales como máximo.
+function dinero(valor, campo, { requerido = true, permiteCero = true } = {}) {
+  if (vacio(valor)) {
+    if (requerido) throw validacion(`${campo} es obligatorio`);
+    return undefined;
+  }
+  const n = typeof valor === 'string' && valor.trim() !== '' ? Number(valor) : valor;
+  if (typeof n !== 'number' || !Number.isFinite(n)) throw validacion(`${campo} debe ser un número`);
+  if (n < 0 || (!permiteCero && n === 0)) {
+    throw validacion(`${campo} debe ser ${permiteCero ? 'cero o mayor' : 'mayor que cero'}`);
+  }
+  if (n > 99999999) throw validacion(`${campo} es demasiado grande`);
+  if (Math.abs(n * 100 - Math.round(n * 100)) > 1e-6) throw validacion(`${campo} admite como máximo dos decimales`);
+  return n;
+}
+
+// Fecha en formato AAAA-MM-DD, que exista en el calendario.
+function fecha(valor, campo) {
+  if (typeof valor !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+    throw validacion(`${campo} debe tener el formato AAAA-MM-DD`);
+  }
+  const d = new Date(`${valor}T00:00:00Z`);
+  if (Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== valor) throw validacion(`${campo} no es una fecha válida`);
+  return valor;
+}
+
 // El cuerpo debe ser un objeto JSON.
 function cuerpo(req) {
   if (req.body === null || typeof req.body !== 'object' || Array.isArray(req.body)) {
@@ -90,4 +116,4 @@ function patronBusqueda(q) {
   return `%${limpio.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
 }
 
-module.exports = { texto, entero, booleano, opcion, precio, cuerpo, paginacion, patronBusqueda };
+module.exports = { texto, entero, booleano, opcion, precio, dinero, fecha, cuerpo, paginacion, patronBusqueda };

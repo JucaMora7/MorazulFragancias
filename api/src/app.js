@@ -29,6 +29,10 @@ function crearApp() {
   app.use('/api/configuracion', admin, administracion.configuracion);
   app.use('/api/fragancias', admin, require('./rutas/fragancias'));
   app.use('/api/productos', admin, require('./rutas/productos'));
+  app.use('/api/inventario', admin, require('./rutas/inventario'));
+  app.use('/api/caja', admin, require('./rutas/caja'));
+  app.use('/api/ventas', admin, require('./rutas/ventas'));
+  app.use('/api/alertas', admin, require('./rutas/alertas'));
 
   app.use(rutaNoEncontrada);
   app.use(manejarErrores);

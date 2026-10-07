@@ -43,7 +43,9 @@ Los comandos se completan a medida que avanzan las etapas.
    - Crear el primer administrador (pide los datos por consola; la contraseña no se muestra): `npm run crear-admin`.
    - Levantarla: `npm start` (o `npm run dev` para reiniciar al guardar). Escucha en el puerto 3000; la comprobación es `GET /api/salud`.
    - Pruebas: `npm test`. Usan una base aparte, `morazul_test`, que reconstruyen desde cero: crearla una vez con `CREATE DATABASE morazul_test OWNER morazul`. Nunca tocan `morazul`.
-   - Rutas públicas bajo `/api/publico` (catálogo, categorías, contacto) y rutas protegidas con JWT (`Authorization: Bearer <token>`) bajo `/api/fragancias`, `/api/productos`, `/api/categorias` y `/api/configuracion`. El inicio de sesión es `POST /api/auth/login`.
+   - Rutas públicas bajo `/api/publico` (catálogo, categorías, contacto) y rutas protegidas con JWT (`Authorization: Bearer <token>`) bajo `/api/fragancias`, `/api/productos`, `/api/categorias`, `/api/configuracion`, `/api/inventario`, `/api/caja`, `/api/ventas` y `/api/alertas`. El inicio de sesión es `POST /api/auth/login`.
+   - Para vender hay que abrir la caja del día (`POST /api/caja/abrir`) y que el producto esté activo y con stock. Las entradas y ajustes de inventario van en `POST /api/inventario/movimientos`.
+   - `db/reconstruir.sh` borra y reconstruye la base: se niega si ya tiene datos de trabajo (usuarios, ventas, movimientos o cajas). Para forzarlo, `FORZAR=si`.
    - Las fotos subidas se guardan en `api/uploads/` (fuera de Git); las imágenes genéricas van en `api/uploads/genericas/` con los nombres de `docs/03-datos-y-catalogo.md`.
 3. **Panel de administración:** disponible en la etapa 6.
 4. **Landing:** disponible en la etapa 7.
