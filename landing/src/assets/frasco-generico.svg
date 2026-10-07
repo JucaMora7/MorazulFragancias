@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="Frasco de fragancia">
+  <rect width="240" height="240" fill="#F1EFFC"/>
+  <ellipse cx="120" cy="206" rx="52" ry="7" fill="#E2DEFA"/>
+  <rect x="104" y="30" width="32" height="20" rx="3" fill="#2A1F8F"/>
+  <rect x="110" y="50" width="20" height="14" fill="#6B5EE0"/>
+  <rect x="94" y="64" width="52" height="12" rx="3" fill="#0A0449"/>
+  <rect x="68" y="76" width="104" height="124" rx="16" fill="#FFFFFF" stroke="#C9C8D6" stroke-width="3"/>
+  <path d="M71 150 Q120 138 169 150 L169 184 Q169 197 156 197 L84 197 Q71 197 71 184 Z" fill="#6B5EE0" opacity="0.85"/>
+  <rect x="88" y="94" width="64" height="38" rx="6" fill="#F1EFFC" stroke="#E2DEFA" stroke-width="2"/>
+  <path d="M120 100 q-9 13 0 22 q9 -9 0 -22 z" fill="#2A1F8F"/>
+</svg>

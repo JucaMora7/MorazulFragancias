@@ -54,7 +54,13 @@ Los comandos se completan a medida que avanzan las etapas.
    - Iniciar sesión con el administrador creado con `npm run crear-admin` en `api/`.
    - Pruebas: `npm test`. Compilar para producción: `npm run build` (queda en `admin/dist/`).
    - Se ve en celular y en escritorio; en celular el menú inferior tiene Inicio, Productos, Vender, Caja y Alertas, y el resto está en el menú lateral.
-4. **Landing:** disponible en la etapa 7.
+4. **Landing pública** (desde la carpeta `landing/`):
+   - Instalar dependencias: `npm install`.
+   - Con la API en marcha: `npm run dev` (abre en http://localhost:5174). Lee `VITE_API_URL` del `.env` de la raíz (por defecto http://localhost:3000), igual que el panel.
+   - Páginas: Inicio, Catálogo (filtros por categoría y árabes, búsqueda y paginación), Detalle de cada fragancia y Contacto. No hay compra en línea: los pedidos se hacen con botones que abren WhatsApp con el mensaje ya escrito.
+   - El teléfono, el correo y la ciudad salen de la API (`CONTACTO_*` en el `.env`); el horario y la dirección aparecen en Contacto en cuanto se definan.
+   - Si una imagen no existe (por ejemplo, mientras no se suban las fotos genéricas), se muestra una ilustración neutra de Morazul.
+   - Pruebas: `npm test`. Compilar para producción: `npm run build` (queda en `landing/dist/`).
 
 ## Etapas
 
