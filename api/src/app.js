@@ -33,6 +33,7 @@ function crearApp() {
   app.use('/api/caja', admin, require('./rutas/caja'));
   app.use('/api/ventas', admin, require('./rutas/ventas'));
   app.use('/api/alertas', admin, require('./rutas/alertas'));
+  app.use('/api/reportes', admin, require('./rutas/reportes'));
 
   app.use(rutaNoEncontrada);
   app.use(manejarErrores);
