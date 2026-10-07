@@ -37,7 +37,14 @@ Los comandos se completan a medida que avanzan las etapas.
    - Copiar `.env.example` a `.env` y completar `DB_USER`, `DB_PASSWORD` y `DB_PORT`.
    - Construir la base desde cero y probarla: `bash db/reconstruir.sh --probar`. Si `psql` no está en el PATH, anteponer `PSQL="ruta/a/psql"`.
    - El script aplica el modelo v1 y las migraciones de `db/migrations/` en orden. La 003 se genera con `node db/scripts/generar_carga_catalogo.js`.
-2. **API:** disponible en la etapa 3.
+2. **API** (desde la carpeta `api/`):
+   - Instalar dependencias: `npm install`.
+   - En el `.env` de la raíz, completar `JWT_SECRET` (mínimo 32 caracteres). Para generar uno: `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`.
+   - Crear el primer administrador (pide los datos por consola; la contraseña no se muestra): `npm run crear-admin`.
+   - Levantarla: `npm start` (o `npm run dev` para reiniciar al guardar). Escucha en el puerto 3000; la comprobación es `GET /api/salud`.
+   - Pruebas: `npm test`. Usan una base aparte, `morazul_test`, que reconstruyen desde cero: crearla una vez con `CREATE DATABASE morazul_test OWNER morazul`. Nunca tocan `morazul`.
+   - Rutas públicas bajo `/api/publico` (catálogo, categorías, contacto) y rutas protegidas con JWT (`Authorization: Bearer <token>`) bajo `/api/fragancias`, `/api/productos`, `/api/categorias` y `/api/configuracion`. El inicio de sesión es `POST /api/auth/login`.
+   - Las fotos subidas se guardan en `api/uploads/` (fuera de Git); las imágenes genéricas van en `api/uploads/genericas/` con los nombres de `docs/03-datos-y-catalogo.md`.
 3. **Panel de administración:** disponible en la etapa 6.
 4. **Landing:** disponible en la etapa 7.
 

@@ -22,3 +22,6 @@ Thumbs.db
 .vscode/
 .idea/
 docs/
+
+# Archivos subidos por la API (fotos de fragancias)
+api/uploads/
