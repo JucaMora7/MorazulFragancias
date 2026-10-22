@@ -5,6 +5,7 @@ import { Campo } from '../componentes/Campo.jsx';
 import Boton from '../componentes/Boton.jsx';
 import { Mensaje } from '../componentes/Estados.jsx';
 import logoVertical from '../assets/logo/logo-vertical-blanco.png';
+import { URL_SITIO } from '../util/enlaces.js';
 
 export default function Login() {
   const { sesion, iniciarSesion } = useSesion();
@@ -67,6 +68,9 @@ export default function Login() {
             {enviando ? 'Ingresando…' : 'Ingresar'}
           </Boton>
           <p className="pequeno tenue">¿Olvidaste tu contraseña? Escribe al administrador del sistema.</p>
+          <a className="enlace-sitio" href={URL_SITIO}>
+            ← Volver al sitio de Morazul
+          </a>
         </form>
       </main>
     </div>

@@ -5,6 +5,7 @@ import { CarritoProvider } from '../sesion/CarritoContext.jsx';
 import { AvisosProvider } from './Avisos.jsx';
 import Icono from './Icono.jsx';
 import Logo from './Logo.jsx';
+import { URL_SITIO } from '../util/enlaces.js';
 
 const ITEMS = [
   { ruta: '/', texto: 'Inicio', icono: 'home', fin: true },
@@ -68,6 +69,11 @@ export default function Layout() {
               ))}
             </nav>
             <div className="menu__espacio" />
+            <a className="menu__item" href={URL_SITIO} target="_blank" rel="noopener noreferrer">
+              <Icono nombre="chevron" />
+              Ver sitio público
+              <span className="solo-lectores"> (se abre en una pestaña nueva)</span>
+            </a>
             <button type="button" className="menu__item" onClick={cerrarSesion}>
               <Icono nombre="logout" />
               Cerrar sesión

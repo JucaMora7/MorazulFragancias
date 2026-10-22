@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useContacto } from '../util/ContactoContext.jsx';
 import { numeroLegible } from '../util/whatsapp.js';
+import { URL_ADMIN } from '../util/enlaces.js';
 import Logo from './Logo.jsx';
 
 export default function Pie() {
@@ -30,7 +31,12 @@ export default function Pie() {
         </nav>
       </div>
       <hr className="pie__linea" />
-      <p className="pequeno">© 2026 Morazul Fragancias. Todos los derechos reservados.</p>
+      <div className="pie__fin">
+        <p className="pequeno">© 2026 Morazul Fragancias. Todos los derechos reservados.</p>
+        <a className="boton boton--contorno boton--pequeno" href={URL_ADMIN}>
+          Acceso administrador
+        </a>
+      </div>
     </footer>
   );
 }

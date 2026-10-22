@@ -47,6 +47,11 @@
 .boton--contorno:hover {
   background: rgba(255, 255, 255, 0.12);
 }
+.boton--pequeno {
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+}
 .boton--bloque {
   width: 100%;
 }
@@ -508,6 +513,13 @@
 .pie a:hover {
   color: var(--surface-white);
   text-decoration: underline;
+}
+.pie__fin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 .pie__linea {
   width: 100%;
