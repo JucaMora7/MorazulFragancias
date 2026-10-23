@@ -18,7 +18,7 @@ Cada pieza se despliega por separado.
 
 ## Requisitos
 
-- Node.js 22 o superior, con npm
+- Node.js 24 o superior, con npm
 - PostgreSQL 16
 - Git
 
