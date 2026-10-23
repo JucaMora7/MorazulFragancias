@@ -7,8 +7,9 @@ const sequelize = new Sequelize(config.db.nombre, config.db.usuario, config.db.c
   port: config.db.puerto,
   dialect: 'postgres',
   logging: false,
-  pool: { max: 10, idle: 10000 },
+  pool: { max: config.enPruebas ? 5 : 3, idle: 10000 },
   define: { freezeTableName: true, timestamps: false },
+  dialectOptions: config.db.ssl ? { ssl: { rejectUnauthorized: true } } : {},
 });
 
 module.exports = sequelize;

@@ -7,8 +7,12 @@ async function iniciar() {
   const app = crearApp();
   await sequelize.authenticate();
   const [{ server_version }] = await sequelize.query("SELECT current_setting('server_version') AS server_version", { type: QueryTypes.SELECT });
-  if (!server_version.startsWith('16.')) {
-    throw new Error(`La base de datos es PostgreSQL ${server_version} y el proyecto exige la 16. Revisa DB_PORT en .env.`);
+  const major = Number.parseInt(server_version, 10);
+  if (!Number.isFinite(major) || major < 15 || major > 17) {
+    throw new Error(`La base de datos es PostgreSQL ${server_version} y el proyecto admite versiones 15 a 17. Revisa DB_PORT en .env.`);
+  }
+  if (major !== 16) {
+    console.warn(`Aviso: PostgreSQL versión ${server_version} detectada (versión base de referencia: 16).`);
   }
 
   const servidor = app.listen(config.puerto, () => {

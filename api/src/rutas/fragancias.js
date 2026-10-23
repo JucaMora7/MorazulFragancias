@@ -154,14 +154,14 @@ router.post('/:id/imagen', subir.single('imagen'), async (req, res) => {
   const f = await cargar(id);
   const clave = `fragancias/${f.codigo.toLowerCase()}-${Date.now()}.webp`;
   const anterior = f.imagen_url;
-  await almacenamiento.guardar(clave, webp);
+  const referencia = await almacenamiento.guardar(clave, webp);
   try {
     await sequelize.transaction(async (t) => {
-      await f.update({ imagen_url: clave }, { transaction: t });
-      await auditar(t, req.usuario.id, 'fragancia', id, 'editar', { cambio: 'imagen', imagen_url: clave });
+      await f.update({ imagen_url: referencia }, { transaction: t });
+      await auditar(t, req.usuario.id, 'fragancia', id, 'editar', { cambio: 'imagen', imagen_url: referencia });
     });
   } catch (err) {
-    await almacenamiento.eliminar(clave);
+    await almacenamiento.eliminar(referencia);
     throw err;
   }
   if (anterior) await almacenamiento.eliminarSiPuede(anterior);

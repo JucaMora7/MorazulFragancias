@@ -27,6 +27,7 @@ const config = {
     nombre: process.env.DB_NAME,
     usuario: process.env.DB_USER,
     clave: process.env.DB_PASSWORD,
+    ssl: process.env.DB_SSL === 'true',
   },
   jwt: {
     secreto: process.env.JWT_SECRET,
@@ -41,7 +42,11 @@ const config = {
   limiteLogin: { ventanaMs: 15 * 60 * 1000, max: enPruebas ? 1000 : 10 },
   imagenes: {
     carpeta: path.join(__dirname, '..', 'uploads'),
-    urlBase: (process.env.IMAGENES_BASE_URL || `http://localhost:${puerto}/uploads`).replace(/\/+$/, ''),
+    urlBase: process.env.IMAGENES_BASE_URL
+      ? process.env.IMAGENES_BASE_URL.replace(/\/+$/, '')
+      : process.env.NODE_ENV === 'production'
+        ? null
+        : `http://localhost:${puerto}/uploads`,
     maxBytes: 3 * 1024 * 1024,
     anchoMax: 800,
   },
@@ -69,6 +74,9 @@ config.validar = () => {
   }
   if (config.jwt.secreto.length < 32) {
     throw new Error('JWT_SECRET debe tener al menos 32 caracteres');
+  }
+  if (process.env.NODE_ENV === 'production' && !process.env.BLOB_READ_WRITE_TOKEN) {
+    throw new Error('Falta BLOB_READ_WRITE_TOKEN: el almacenamiento persistente de imágenes es obligatorio en producción');
   }
 };
 
